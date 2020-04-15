@@ -7,7 +7,7 @@ import AP010102 from './AppForms/AP010102/appCtx'
 
 function App() {
     return (
-        <div className="App">
+        <React.Fragment>
             <Layout>
                 <Switch>
                     <Route exact path='/' component={Home} />
@@ -15,7 +15,7 @@ function App() {
                     <Route path="/ap010102" component={AP010102} />
                 </Switch>
             </Layout>
-        </div>
+        </React.Fragment>
     );
 }
 

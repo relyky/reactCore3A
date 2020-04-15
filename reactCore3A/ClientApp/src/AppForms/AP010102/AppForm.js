@@ -1,5 +1,8 @@
 ﻿import React, { Fragment, useState, useEffect } from 'react'
 
+import image01 from 'assets/image/image01.jpg'
+import image02 from 'assets/image/image02.jpg'
+
 //import useAppInfo from '../../Hooks/useAppInfo'
 //import useFormData from '../../Hooks/useFormdData'
 
@@ -34,6 +37,13 @@ export default function AppForm() {
             <pre style={{ fontSize: '3em' }}>formData: {JSON.stringify(formData)}</pre>
             <hr />
             <input value={myName} onChange={handleEvent} />*/}
+
+            <p>圖一
+                <img src={image01} alt="廚房" />
+            </p>
+            <p>圖二
+                <img src={image02} alt="電器櫃" />
+            </p>
         </Fragment>
     )
 }
