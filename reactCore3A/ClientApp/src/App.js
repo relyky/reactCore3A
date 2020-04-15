@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import './App.css'
 import Layout from './Layouts/_DefaultLayout'
 import Home from './Home'
 import AP010101 from './AppForms/AP010101/appCtx'
