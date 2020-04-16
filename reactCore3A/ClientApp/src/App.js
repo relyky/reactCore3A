@@ -4,8 +4,10 @@ import Layout from './Layouts/_DefaultLayout'
 import Home from './Home'
 import AP010101 from './AppForms/AP010101/appCtx'
 import AP010102 from './AppForms/AP010102/appCtx'
+import useAppInfo from './Hooks/useAppInfo'
 
 function App() {
+    //const [appInfo, { setAppInfo }] = useAppInfo()
     return (
         <React.Fragment>
             <Layout>

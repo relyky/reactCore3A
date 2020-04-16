@@ -15,35 +15,9 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Compile Remove="ClientApp\build\**" />
     <Content Remove="$(SpaRoot)**" />
-    <Content Remove="ClientApp\build\**" />
-    <EmbeddedResource Remove="ClientApp\build\**" />
     <None Remove="$(SpaRoot)**" />
-    <None Remove="ClientApp\build\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\build\asset-manifest.json" />
-    <None Remove="ClientApp\build\favicon.ico" />
-    <None Remove="ClientApp\build\index.html" />
-    <None Remove="ClientApp\build\logo192.png" />
-    <None Remove="ClientApp\build\logo512.png" />
-    <None Remove="ClientApp\build\manifest.json" />
-    <None Remove="ClientApp\build\precache-manifest.a2d535918b6d7e863e7606045ddc99f8.js" />
-    <None Remove="ClientApp\build\robots.txt" />
-    <None Remove="ClientApp\build\service-worker.js" />
-    <None Remove="ClientApp\build\static\css\main.d1b05096.chunk.css" />
-    <None Remove="ClientApp\build\static\css\main.d1b05096.chunk.css.map" />
-    <None Remove="ClientApp\build\static\js\2.c4713e1a.chunk.js" />
-    <None Remove="ClientApp\build\static\js\2.c4713e1a.chunk.js.LICENSE.txt" />
-    <None Remove="ClientApp\build\static\js\2.c4713e1a.chunk.js.map" />
-    <None Remove="ClientApp\build\static\js\main.bfebb51d.chunk.js" />
-    <None Remove="ClientApp\build\static\js\main.bfebb51d.chunk.js.map" />
-    <None Remove="ClientApp\build\static\js\runtime-main.920fda0a.js" />
-    <None Remove="ClientApp\build\static\js\runtime-main.920fda0a.js.map" />
-    <None Remove="ClientApp\build\static\media\logo.5d5d9eef.svg" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

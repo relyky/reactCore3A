@@ -1,5 +1,6 @@
 ﻿import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import useAppInfo from 'Hooks/useAppInfo'
 
 //import clsx from 'clsx'
 //import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -18,8 +19,12 @@ import { Link } from 'react-router-dom'
 
 /// PersistentDrawerLeft
 export default function DefaultLayout(props) {
+    const [appInfo] = useAppInfo()
     return (
-        <div>
+        <div>`
+            <div>
+                <pre>{JSON.stringify(appInfo, null, 2)}</pre>
+            </div>
             <nav>
                 <h4>功能連結：</h4>
                 <ul>

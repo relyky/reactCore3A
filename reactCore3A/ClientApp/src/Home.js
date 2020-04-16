@@ -4,7 +4,7 @@ import './Home.css'
 
 export default function Home(props) {
     return (
-        <div class="App">
+        <div className="App">
             <header className="App-header">
                 <h1>Brand Logo</h1>
                 <img src={logo} className="App-logo" alt="logo" />

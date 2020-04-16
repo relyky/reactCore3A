@@ -1,5 +1,7 @@
 ﻿import React, { Fragment, useState, useEffect } from 'react'
 
+import useAppInfo from 'Hooks/useAppInfo'
+
 //import useAppInfo from '../../Hooks/useAppInfo'
 //import useFormData from '../../Hooks/useFormdData'
 
@@ -14,6 +16,7 @@ export const initialFormData = {
 }
 
 export default function AppForm() {
+    const [appInfo, { assignAppInfo, resetAppInfo }] = useAppInfo()
     //const [myName, setMyName] = useState('')
     //const [formData, { assignValue, assignProps }] = useFormData()
 
@@ -25,10 +28,13 @@ export default function AppForm() {
     //    setMyName(e.target.value)
     //}
 
+    console.log('reander', { appInfo, assignAppInfo, resetAppInfo })
     return (
         <Fragment>
             <h1>{APP_TITLE} - {APP_ID}</h1>
             <p>{APP_DESCRIPTION}</p>
+            <pre>{JSON.stringify(appInfo)}</pre>
+
             {/*
             <p style={{ fontSize: '3em' }}>{`你好，我的名字是${myName}。`}</p>
             <pre style={{ fontSize: '3em' }}>formData: {JSON.stringify(formData)}</pre>
