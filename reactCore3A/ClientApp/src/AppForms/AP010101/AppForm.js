@@ -1,4 +1,5 @@
 ﻿import React, { Fragment, useState, useEffect } from 'react'
+import swal from 'sweetalert2'
 
 import useAppInfo from 'Hooks/useAppInfo'
 
@@ -28,12 +29,38 @@ export default function AppForm() {
     //    setMyName(e.target.value)
     //}
 
+    async function swalPrompt() {
+        const { value: password } = await swal.fire({
+            icon: 'question',
+            title: 'Enter your password',
+            input: 'password',
+            inputPlaceholder: 'Enter your password',
+            inputAttributes: {
+                maxlength: 10,
+                autocapitalize: 'off',
+                autocorrect: 'off'
+            }
+        });
+
+        if (password) {
+            swal.fire(`Entered password: ${password}`)
+        }
+    } 
+
     console.log('reander', { appInfo, assignAppInfo, resetAppInfo })
     return (
         <Fragment>
             <h1>{APP_TITLE} - {APP_ID}</h1>
             <p>{APP_DESCRIPTION}</p>
             <pre>{JSON.stringify(appInfo)}</pre>
+
+            <button onClick={() => swal.fire({
+                icon: 'info',
+                title: '測試訊息視窗',
+                text: '這裡是訊息內容，這裡是訊息內容，這裡是訊息內容。'
+            })}>swal.info</button>
+
+            <button onClick={swalPrompt}>swal.prompt</button>
 
             {/*
             <p style={{ fontSize: '3em' }}>{`你好，我的名字是${myName}。`}</p>
