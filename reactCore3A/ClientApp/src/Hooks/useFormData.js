@@ -90,12 +90,15 @@ function useFormDataReducer(initialState) {
 const FormDataContext = createContext()
 
 export default function useFormData() {
-    return useContext(FormDataContext)
+    const ret = useContext(FormDataContext)
+    console.log('useFormData →', ret)
+    return ret
 }
 
 export function FormDataProvider({ children, initialState /* object */ }) {
+    const sharedValue = useFormDataReducer(initialState || {})
     return (
-        <FormDataContext.Provider value={useFormDataReducer(initialState || {})}>
+        <FormDataContext.Provider value={sharedValue}>
             {children}
         </FormDataContext.Provider>)
 }

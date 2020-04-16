@@ -8,6 +8,8 @@ import useAppInfo from './Hooks/useAppInfo'
 
 function App() {
     //const [appInfo, { setAppInfo }] = useAppInfo()
+    console.log('App.enter')
+
     return (
         <React.Fragment>
             <Layout>

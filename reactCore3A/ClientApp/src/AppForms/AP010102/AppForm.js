@@ -1,6 +1,10 @@
 ﻿import React, { Fragment, useState, useEffect } from 'react'
 
 import useAppInfo from 'Hooks/useAppInfo'
+import usePostData from 'Hooks/usePostData'
+import useFormData from 'Hooks/useFormData'
+import useMetaStore from 'Hooks/useMetaStore'
+
 import image01 from 'assets/image/image01.jpg'
 import image02 from 'assets/image/image02.jpg'
 
@@ -18,29 +22,22 @@ export const initialFormData = {
 }
 
 export default function AppForm() {
-    const appInfo = useAppInfo()
-    //const [myName, setMyName] = useState('')
-    //const [formData, { assignValue, assignProps }] = useFormData()
+    const [appInfo] = useAppInfo()
+    const [formData, { assignProps }] = useFormData()
+    const [meta, { assignMeta }] = useMetaStore()
+    const [{ postData }, f_loading] = usePostData()
 
-    //useEffect(() => {
-    //    setMyName('somebody')
-    //}, []) // 等同 componentDidMount
-
-    //function handleEvent(e) {
-    //    setMyName(e.target.value)
-    //}
 
     return (
         <Fragment>
             <h1>{APP_TITLE} - {APP_ID}</h1>
             <p>{APP_DESCRIPTION}</p>
-            <pre>{JSON.stringify(appInfo)}</pre>
-            {/*
-            <p style={{ fontSize: '3em' }}>{`你好，我的名字是${myName}。`}</p>
-            <pre style={{ fontSize: '3em' }}>formData: {JSON.stringify(formData)}</pre>
-            <hr />
-            <input value={myName} onChange={handleEvent} />*/}
 
+            <hr />
+
+
+
+            <hr />
             <p>圖一
                 <img src={image01} alt="廚房" />
             </p>

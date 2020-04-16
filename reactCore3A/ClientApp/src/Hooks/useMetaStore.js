@@ -2,17 +2,6 @@
 import t, { Schema } from 'typy'
 
 //## resource
-const initAppInfo = {
-    loginUserId: '',
-    loginUserName: '來賓',
-    f_blocking: false
-}
-
-//const appInfoSchema = {
-//    loginUserId: Schema.String,
-//    loginUserName: Schema.String,
-//    f_blocking: Schema.Boolean,
-//}
 
 //## GO
 const MetaStoreContext = createContext()
@@ -22,19 +11,17 @@ export default function useMetaStore() {
 }
 
 export function MetaStoreProvider({ children }) {
-    const [store, setStore] = useState({})
+    const [meta, setMeta] = useState({})
 
-    function set assignAppInfo(newInfo /* object */) {
-        if (!t(newInfo).isObject) throw new Error('Invalid value type!')
-        setAppInfo({ ...appInfo, ...newInfo })
-    }
+    function assignMeta(newMeta /* object */) {
+        if (!t(newMeta).isObject) throw new Error('Invalid value type!') 
 
-    function resetAppInfo() {
-        setAppInfo(initAppInfo)
+        // [{name1, payload1},{name2, payload2}, ...]
+        setMeta({ ...meta, ...newMeta })
     }
 
     return (
-        <MetaStoreContext.Provider value={[appInfo, { assignAppInfo, resetAppInfo }]}>
+        <MetaStoreContext.Provider value={[meta, { assignMeta, setMeta }]}>
             {children}
         </MetaStoreContext.Provider>)
 }
