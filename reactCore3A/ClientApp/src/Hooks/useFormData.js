@@ -105,6 +105,6 @@ export function FormDataProvider({ children, initialState /* object */ }) {
 
 /// 應用說明
 // step 1: 於上層如 App 或 AppForm 設定組織 
-//   <FormDataProvider>
+//   <FormDataProvider initialState={initialState}>
 // step 2: 於其下層或內層function componnet 叫用：
 //   const [formData, { assignValue, assignProps }] = useFormData()

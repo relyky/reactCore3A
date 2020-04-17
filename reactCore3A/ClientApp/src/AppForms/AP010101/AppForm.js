@@ -1,33 +1,33 @@
-﻿import React, { Fragment, useState, useEffect } from 'react'
+﻿import React, { useState } from 'react'
 import swal from 'sweetalert2'
 
 import useAppInfo from 'Hooks/useAppInfo'
+import useFormData from 'Hooks/useFormData'
+import useMetaStore from 'Hooks/useMetaStore'
 
-//import useAppInfo from '../../Hooks/useAppInfo'
-//import useFormData from '../../Hooks/useFormdData'
+const formProfile = {
+    FORM_ID:'AP010101',
+    FORM_TITLE: 'Say hi',
+    FORM_DESCRIPTION: '歡迎光臨。'
+}
 
-const APP_ID = "AP010101"
-const APP_TITLE = 'Say hi'
-const APP_DESCRIPTION = '歡迎光臨。'
-
-export const profile = { APP_ID, APP_TITLE, APP_DESCRIPTION }
-export const initialFormData = {
+const initialFormData = {
     foo: 'foo',
     bar: 987654321
 }
 
 export default function AppForm() {
-    const [appInfo, { assignAppInfo, resetAppInfo }] = useAppInfo()
-    //const [myName, setMyName] = useState('')
-    //const [formData, { assignValue, assignProps }] = useFormData()
+    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [formData, { assignValue, assignProps }] = useFormData()
+    const [meta, { assignMeta }] = useMetaStore()
 
-    //useEffect(() => {
-    //    setMyName('somebody')
-    //}, []) // 等同 componentDidMount
-
-    //function handleEvent(e) {
-    //    setMyName(e.target.value)
-    //}
+    //## init.
+    useState(() => {
+        // 通報現在在那支作業
+        assignAppInfo({ ...formProfile })
+        // 初始化
+        assignProps(initialFormData)
+    })
 
     async function swalPrompt() {
         const { value: password } = await swal.fire({
@@ -47,13 +47,9 @@ export default function AppForm() {
         }
     } 
 
-    console.log('reander', { appInfo, assignAppInfo, resetAppInfo })
+    console.log('reander', { appInfo })
     return (
-        <Fragment>
-            <h1>{APP_TITLE} - {APP_ID}</h1>
-            <p>{APP_DESCRIPTION}</p>
-            <pre>{JSON.stringify(appInfo)}</pre>
-
+        <div>
             <button onClick={() => swal.fire({
                 icon: 'info',
                 title: '測試訊息視窗',
@@ -67,6 +63,6 @@ export default function AppForm() {
             <pre style={{ fontSize: '3em' }}>formData: {JSON.stringify(formData)}</pre>
             <hr />
             <input value={myName} onChange={handleEvent} />*/}
-        </Fragment>
+        </div>
     )
 }

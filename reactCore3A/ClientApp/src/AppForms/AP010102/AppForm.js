@@ -1,49 +1,44 @@
-﻿import React, { Fragment, useState, useEffect } from 'react'
-
-import useAppInfo from 'Hooks/useAppInfo'
-import usePostData from 'Hooks/usePostData'
-import useFormData from 'Hooks/useFormData'
-import useMetaStore from 'Hooks/useMetaStore'
+﻿import React, { useState } from 'react'
 
 import image01 from 'assets/image/image01.jpg'
 import image02 from 'assets/image/image02.jpg'
 
-//import useAppInfo from '../../Hooks/useAppInfo'
-//import useFormData from '../../Hooks/useFormdData'
+import useAppInfo from 'Hooks/useAppInfo'
+import useFormData from 'Hooks/useFormData'
+import useMetaStore from 'Hooks/useMetaStore'
 
-const APP_ID = "AP010102"
-const APP_TITLE = 'Say hi, too'
-const APP_DESCRIPTION = '再次歡迎光臨。'
+const formProfile = {
+    FORM_ID: 'AP010102',
+    FORM_TITLE: 'Say hi, too',
+    FORM_DESCRIPTION: '再次歡迎光臨。'
+}
 
-export const profile = { APP_ID, APP_TITLE, APP_DESCRIPTION }
-export const initialFormData = {
+const initialFormData = {
     foo: 'foo',
     bar: 987654321
 }
 
 export default function AppForm() {
-    const [appInfo] = useAppInfo()
-    const [formData, { assignProps }] = useFormData()
+    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData()
 
+    //## init.
+    useState(() => {
+        // 通報現在在那支作業
+        assignAppInfo({ ...formProfile })
+        // 初始化
+        assignProps(initialFormData)
+    })
 
     return (
-        <Fragment>
-            <h1>{APP_TITLE} - {APP_ID}</h1>
-            <p>{APP_DESCRIPTION}</p>
-
-            <hr />
-
-
-
-            <hr />
+        <div>
             <p>圖一
                 <img src={image01} alt="廚房" />
             </p>
             <p>圖二
                 <img src={image02} alt="電器櫃" />
             </p>
-        </Fragment>
+        </div>
     )
 }
