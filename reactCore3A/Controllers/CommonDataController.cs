@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace reactCore3A.Controllers
     {
         [HttpPost]
         [Route("[Action]")]
-        public Dictionary<string, string> GetWeekList(GetWeekListArgs args)
+        public IActionResult GetWeekList(GetWeekListArgs args)
         {
             Dictionary<string, string> codeList = new Dictionary<string, string>();
 
@@ -40,12 +41,12 @@ namespace reactCore3A.Controllers
                 codeList.Add("7", "星期七");
                 Debug.WriteLine("GetWeekList(C)");
             }
-            else 
+            else
             {
-                throw new Exception("參數只允許C或E。");
+                return BadRequest("參數只允許C或E。");
             }
 
-            return codeList;
+            return Ok(codeList);
         }
 
         public class GetWeekListArgs
