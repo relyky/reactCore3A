@@ -38,6 +38,7 @@ namespace reactCore3A.Controllers
         }
 
         [HttpPost]
+        [Route("[Action]")]
         public IEnumerable<WeatherForecast> QryDataList()
         {
             var rng = new Random();
