@@ -2,7 +2,7 @@
 import axios from 'axios'
 import useAppInfo from 'Hooks/useAppInfo'
 import t from 'typy'
-import { LastErrMsg, unboxLastErrMsg, showLastErrMsg } from 'LastErrMsg'
+import { LastErrMsg, unboxLastErrMsg, showLastErrMsg } from 'Common/LastErrMsg'
 
 /// # 規格
 /// const [{ postData, downloadFile, uploadFile }, f_loading] = usePostData({ baseUrl:'/area/controller', blockui:true, trace:false, msgBox: true })
