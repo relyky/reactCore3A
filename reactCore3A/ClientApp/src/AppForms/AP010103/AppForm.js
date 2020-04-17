@@ -1,10 +1,11 @@
-﻿import React, { useEffect } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
+import useLoad from 'Hooks/useLoad'
 
 const formProfile = {
     FORM_ID: 'AP010103',
@@ -21,7 +22,10 @@ export default function AppForm() {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: '/WeatherForecast' })
+    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/WeatherForecast' })
+
+    const [args, setArgs] = useState({ type: 'C' })
+    const [weekList, f_WeekLoading, error] = useLoad('api/CommonData/GetWeekList', args)
 
     //## init.
     useEffect(() => {
@@ -39,12 +43,17 @@ export default function AppForm() {
         })
     }
 
-    console.log('AP010103', { appInfo, formData, meta })
+    console.log('AP010103', { appInfo, formData, meta, error })
     const { dataList } = meta
     return (
         <div>
             <hr />
-            <p style={{marginTop: 10, marginBottom: 10}}>
+            <input type='text' value={args.type} onChange={(e) => setArgs({ type: e.target.value })} placeholder="請輸入C或E" />
+            {f_WeekLoading && <span>Week Loading...</span>}
+            <pre>ERROR:{error}</pre>
+            <pre>{JSON.stringify(weekList)}</pre>
+            <hr />
+            <p style={{ marginTop: 10, marginBottom: 10 }}>
                 <button onClick={qryDataList}>查詢</button>
             </p>
             <table>
