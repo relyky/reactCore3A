@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useEffect } from 'react'
 import logo from 'assets/logo.svg'
 import './Home.css'
 import useAppInfo from 'Hooks/useAppInfo'
@@ -7,11 +7,12 @@ export default function Home(props) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
 
     //## init.
-    useState(() => {
+    useEffect(() => {
         // 通報現在在那支作業
         assignAppInfo({ FORM_ID: 'Home', FORM_TITLE: '首頁', FORM_DESCRIPTION: '首頁說明。' })
-    })
+    },[])
 
+    //console.log('Home', { appInfo })
     return (
         <div className="App">
             <header className="App-header">

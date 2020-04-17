@@ -90,9 +90,7 @@ function useFormDataReducer(initialState) {
 const FormDataContext = createContext()
 
 export default function useFormData() {
-    const ret = useContext(FormDataContext)
-    console.log('useFormData →', ret)
-    return ret
+    return useContext(FormDataContext)
 }
 
 export function FormDataProvider({ children, initialState /* object */ }) {

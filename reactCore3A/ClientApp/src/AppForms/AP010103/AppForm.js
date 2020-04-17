@@ -4,11 +4,12 @@ import swal from 'sweetalert2'
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
+import usePostData from 'Hooks/usePostData'
 
 const formProfile = {
-    FORM_ID:'AP010101',
-    FORM_TITLE: 'Say hi',
-    FORM_DESCRIPTION: '歡迎光臨。'
+    FORM_ID:'AP010103',
+    FORM_TITLE: '通訊測試',
+    FORM_DESCRIPTION: '通訊測試說明。'
 }
 
 const initialFormData = {
@@ -20,7 +21,8 @@ export default function AppForm() {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-
+    const [{ postData, downloadFile }, f_loading] = usePostData({ baseUrl: '/api/WeatherForecast' })
+ 
     //## init.
     useEffect(() => {
         // 通報現在在那支作業
@@ -29,34 +31,18 @@ export default function AppForm() {
         assignProps(initialFormData)
     },[])
 
-    async function swalPrompt() {
-        const { value: password } = await swal.fire({
-            icon: 'question',
-            title: 'Enter your password',
-            input: 'password',
-            inputPlaceholder: 'Enter your password',
-            inputAttributes: {
-                maxlength: 10,
-                autocapitalize: 'off',
-                autocorrect: 'off'
-            }
-        });
+    function qryDataList() {
+        const args = { accInfo: 'foo' }
+        postData('QryDataList', args).then(dataList => {
+            assignMeta({ dataList })
+        })
+    }
 
-        if (password) {
-            swal.fire(`Entered password: ${password}`)
-        }
-    } 
-
-    console.log('AP010101', { appInfo, formData, meta })
+    console.log('AP010103', { appInfo, formData, meta })
     return (
         <div>
-            <button onClick={() => swal.fire({
-                icon: 'info',
-                title: '測試訊息視窗',
-                text: '這裡是訊息內容，這裡是訊息內容，這裡是訊息內容。'
-            })}>swal.info</button>
 
-            <button onClick={swalPrompt}>swal.prompt</button>
+            <button onClick={qryDataList}>查詢</button>
 
             {/*
             <p style={{ fontSize: '3em' }}>{`你好，我的名字是${myName}。`}</p>

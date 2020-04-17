@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useEffect } from 'react'
 
 import image01 from 'assets/image/image01.jpg'
 import image02 from 'assets/image/image02.jpg'
@@ -24,13 +24,14 @@ export default function AppForm() {
     const [meta, { assignMeta }] = useMetaStore()
 
     //## init.
-    useState(() => {
+    useEffect(() => {
         // 通報現在在那支作業
         assignAppInfo({ ...formProfile })
         // 初始化
         assignProps(initialFormData)
-    })
+    },[])
 
+    console.log('AP010102', { appInfo, formData, meta })
     return (
         <div>
             <p>圖一
