@@ -4,7 +4,7 @@ import './Home.css'
 import useAppInfo from 'Hooks/useAppInfo'
 
 export default function Home(props) {
-    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [app, { assignAppInfo }] = useAppInfo()
 
     //## init.
     useEffect(() => {

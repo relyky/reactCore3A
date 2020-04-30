@@ -10,8 +10,8 @@ export default function useMetaStore() {
     return useContext(MetaStoreContext)
 }
 
-export function MetaStoreProvider({ children }) {
-    const [meta, setMeta] = useState({})
+export function MetaStoreProvider({ children, init /* object */  }) {
+    const [meta, setMeta] = useState(init || {})
 
     function assignMeta(newMeta /* object */) {
         if (!t(newMeta).isObject) throw new Error('Invalid value type!') 

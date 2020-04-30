@@ -93,8 +93,8 @@ export default function useFormData() {
     return useContext(FormDataContext)
 }
 
-export function FormDataProvider({ children, initialState /* object */ }) {
-    const sharedValue = useFormDataReducer(initialState || {})
+export function FormDataProvider({ children, init /* object */ }) {
+    const sharedValue = useFormDataReducer(init || {})
     return (
         <FormDataContext.Provider value={sharedValue}>
             {children}
