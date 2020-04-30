@@ -14,12 +14,9 @@ export default function useLoad(url, args) {
             url: url,
             data: args
         }).then(resp => {
-            //debugger
-            //console.log('useLoad:SUCCESS', resp)
             setData(resp.data)
             setError(null)
         }).catch(xhr => {
-            debugger
             console.error('useLoad:ERROR', xhr.response.data)
             setError(xhr.response.data)
         }).finally(() => {
