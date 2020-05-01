@@ -32,6 +32,9 @@ export default function DefaultLayout(props) {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
+                        <Link to="/Login">Login</Link>
+                    </li>
+                    <li>
                         <Link to="/ap010101">AP010101</Link>
                     </li>
                     <li>
