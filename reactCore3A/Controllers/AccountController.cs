@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using reactCore3A.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace reactCore3A.Controllers
 {
@@ -27,17 +32,19 @@ namespace reactCore3A.Controllers
 
         private IConfiguration _config;
 
-        public AccountController(IConfiguration config) 
+        public AccountController(IConfiguration config)
         {
             _config = config;
         }
 
-        private UserModel AuthenticateUser(UserModel login) 
+        private UserModel AuthenticateUser(LoginInfo login)
         {
             UserModel user = null;
 
-            if (login.userId == "abc" && login.mima == "def") {
-                user = new UserModel {
+            if (login.userId == "abc" && login.credential == "def")
+            {
+                user = new UserModel
+                {
                     userId = "abc",
                     mima = "xxx",
                     email = "abc@email.server"
@@ -47,22 +54,41 @@ namespace reactCore3A.Controllers
             return user;
         }
 
-        private string GenerateJsonWebToken(UserModel userInfo) 
-        {  
-            //var secerityKey = SymmetricSecurityKey();
-            return "";
+        private string GenerateJsonWebToken(UserModel userInfo)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.userId),
+                new Claim(JwtRegisteredClaimNames.Email, userInfo.email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            DateTime? expires = null;
+            if (_config["Jwt:ExpireMinutes"] != null)
+                expires = DateTime.Now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Issuer"],
+                claims,
+                notBefore: null,
+                expires,
+                signingCredentials);
+
+            string encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return encodedToken;
         }
 
-        [HttpPost("[action]")]
-        public IActionResult Login(string userId, string credential) 
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult Login(LoginInfo login)
         {
-            UserModel login = new UserModel();
-            login.userId = userId;
-            login.mima = credential;
-
             var user = this.AuthenticateUser(login);
 
-            if (user != null) {
+            if (user != null)
+            {
                 var token = GenerateJsonWebToken(user);
                 return Ok(new { token });
             }
@@ -70,6 +96,22 @@ namespace reactCore3A.Controllers
             return Unauthorized();
         }
 
-        
+        [Authorize]
+        [HttpPost("[action]")]
+        public IActionResult Welcome() 
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var claimList = identity.Claims.ToList();
+            var userName = claimList[0].Value;
+            return Ok($"Welcome To: {userName}");
+        }
+
+        [Authorize]
+        [HttpGet("values")]
+        public IEnumerable<string> GetValues() 
+        {
+            return new string[] {"Foo","Bar","Baz","今天天氣真好。" };
+        }
+
     }
-}  
+}

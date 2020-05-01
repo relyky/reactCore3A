@@ -14,7 +14,7 @@ export default function AppForm({formProfile}) {
     const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: true })
 
     //## init.通報現在在那支作業
-    useState(() => assignAppInfo({ ...formProfile }))
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function handleLogin()
     {
@@ -22,7 +22,7 @@ export default function AppForm({formProfile}) {
             userId: formData.userId,
             credential: formData.mima
         }
-        postData('Authenticate', args).then(console.log)
+        postData('Login', args).then(console.log)
     }
 
     console.log(formProfile.FORM_TITLE, { appInfo, formData, meta })
