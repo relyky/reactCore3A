@@ -97,7 +97,7 @@ namespace reactCore3A.Controllers
         }
 
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public IActionResult Welcome() 
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -107,11 +107,12 @@ namespace reactCore3A.Controllers
         }
 
         [Authorize]
-        [HttpGet("values")]
+        [HttpPost("[action]")]
         public IEnumerable<string> GetValues() 
         {
             return new string[] {"Foo","Bar","Baz","今天天氣真好。" };
         }
+
 
     }
 }

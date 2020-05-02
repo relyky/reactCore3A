@@ -8,6 +8,10 @@ import AP010102 from './AppForms/AP010102/appCtx'
 import AP010103 from './AppForms/AP010103/appCtx'
 //import useAppInfo from './Hooks/useAppInfo'
 
+/// 
+/// 註冊AppForm與Routing。
+///
+
 function App() {
     //const [appInfo, { setAppInfo }] = useAppInfo()
     //console.log('App', { appInfo })

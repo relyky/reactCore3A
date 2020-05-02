@@ -7,6 +7,10 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AppInfoProvider } from './Hooks/useAppInfo'
+import axios from 'axios'
+
+//axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 ReactDOM.render(
     <BrowserRouter>
