@@ -63,6 +63,8 @@ namespace reactCore3A
 
             services.AddMvc();
 
+            // 將 Session 存在 ASP.NET Core 記憶體中
+            services.AddDistributedMemoryCache();
             services.AddSession(optons =>
             {
                 optons.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));

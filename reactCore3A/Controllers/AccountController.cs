@@ -41,7 +41,7 @@ namespace reactCore3A.Controllers
                     authGuid = Guid.NewGuid()
                 };
                 
-                this.HttpContext.Session.Set("LoginUserInfo", Utilities.SerializeToMemory(user));
+                this.HttpContext.Session.SetObject("LoginUserInfo", user);
 
                 return true;
             }
@@ -98,7 +98,7 @@ namespace reactCore3A.Controllers
 
             if (isAuthed)
             {
-                var user = Utilities.DeserializeFromMemory<UserModel>(this.HttpContext.Session.Get("LoginUserInfo"));
+                var user = this.HttpContext.Session.GetObject<UserModel>("LoginUserInfo");
                 var token = GenerateJsonWebToken(user);
                 Response.Cookies.Append("AuthToken", token);
                 return Ok(new { token });
