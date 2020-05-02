@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react'
-import swal from 'sweetalert2'
+import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
 
 import useAppInfo from 'Hooks/useAppInfo'
@@ -12,7 +12,7 @@ export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: true })
+    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -26,6 +26,32 @@ export default function AppForm({ formProfile }) {
             console.log('handleLogin', data)
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+            showLastErrMsg({ errMsg: '登入成功', errType: 'SUCCESS' })
+        })
+    }
+
+    function handleLogin() {
+        const args = {
+            userId: formData.userId,
+            credential: formData.mima
+        }
+        postData('Login', args).then(data => {
+            //console.log('handleLogin', data)
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
+            axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+            // And to get login user info
+            postData('GetLoginInfo').then(loginInfo => {
+                //console.log('GetLoginInfo', data)
+                assignAppInfo({ ...loginInfo })
+            })
+        })
+    }
+
+    function handleGetLoginInfo() {
+        postData('GetLoginInfo').then(data => {
+            //console.log('handleGetUserInfo', data)
+            assignMeta({ loginInfo: data })
         })
     }
 
@@ -46,9 +72,9 @@ export default function AppForm({ formProfile }) {
                 placeholder="密碼" />
             <button onClick={handleLogin}>登入</button>
             <hr />
-            <button>登出</button>
+            <button onClick={handleGetLoginInfo}>Login Info</button>
             <hr />
-            <button onClick={handleGetValues}>GetValues</button>
+            <button onClick={handleGetValues}>values</button>
             <hr />
             <pre>
                 <h4>meta</h4>

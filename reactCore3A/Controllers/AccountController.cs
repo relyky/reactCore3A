@@ -46,6 +46,7 @@ namespace reactCore3A.Controllers
                 user = new UserModel
                 {
                     userId = "abc",
+                    userName = "郝聰明",
                     mima = "xxx",
                     email = "abc@email.server"
                 };
@@ -59,21 +60,23 @@ namespace reactCore3A.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            DateTime notBefore = DateTime.UtcNow;
+            DateTime expires = _config["Jwt:ExpireMinutes"] != null
+                ? notBefore.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]))
+                : notBefore.AddMinutes(30);
+
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.userId),
+                new Claim(JwtRegisteredClaimNames.GivenName, userInfo.userName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-
-            DateTime? expires = null;
-            if (_config["Jwt:ExpireMinutes"] != null)
-                expires = DateTime.Now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]));
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Issuer"],
                 claims,
-                notBefore: null,
+                notBefore,
                 expires,
                 signingCredentials);
 
@@ -81,8 +84,7 @@ namespace reactCore3A.Controllers
             return encodedToken;
         }
 
-        [HttpPost]
-        [Route("[action]")]
+        [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
         {
             var user = this.AuthenticateUser(login);
@@ -97,22 +99,38 @@ namespace reactCore3A.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
-        public IActionResult Welcome() 
+        [HttpPost("[action]")]
+        public IActionResult GetLoginInfo() 
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var claimList = identity.Claims.ToList();
-            var userName = claimList[0].Value;
-            return Ok($"Welcome To: {userName}");
+
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            DateTime iss = origin.AddSeconds(double.Parse(claimList[4].Value));
+            DateTime exp = origin.AddSeconds(double.Parse(claimList[5].Value));
+
+            var loginInfo = new {
+                loginUserId = claimList[0].Value,
+                loginUserName= claimList[1].Value,
+                loginUserEmail = claimList[2].Value,
+                loginAuthUuid = claimList[3].Value,
+                loginAuthTime = iss.ToLocalTime().ToString("yyyy\\/MM\\/dd HH:mm:ss"),
+                loginAuthExpires = exp.ToLocalTime().ToString("yyyy\\/MM\\/dd HH:mm:ss")
+            };
+
+            return Ok(loginInfo);
         }
 
+        /// <summary>
+        /// for tseting
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpPost("[action]")]
         public IEnumerable<string> GetValues() 
         {
             return new string[] {"Foo","Bar","Baz","今天天氣真好。" };
         }
-
 
     }
 }
