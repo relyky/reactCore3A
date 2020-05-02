@@ -57,10 +57,10 @@ namespace reactCore3A.Controllers
 
         private string GenerateJsonWebToken(UserModel userInfo)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            DateTime notBefore = DateTime.UtcNow;
+            DateTime notBefore = DateTime.Now;
             DateTime expires = _config["Jwt:ExpireMinutes"] != null
                 ? notBefore.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]))
                 : notBefore.AddMinutes(30);
