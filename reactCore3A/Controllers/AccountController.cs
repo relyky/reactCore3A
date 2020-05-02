@@ -11,9 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using reactCore3A.ViewModel;
 using Microsoft.AspNetCore.Authorization;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
+using reactCore3A.Models;
 
 namespace reactCore3A.Controllers
 {
@@ -21,18 +19,6 @@ namespace reactCore3A.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        //[HttpPost]
-        //[Route("[action]")]
-        //public IActionResult Authenticate(string userId, string credential)
-        //{
-        //    return Ok(new LastErrMsg("登入成功。", LastErrMsg.SUCCESS));
-        //    //var msg = new LastErrMsg("我出運了。");
-        //    //msg.errMsgDetailList = new Dictionary<string, string>();
-        //    //msg.errMsgDetailList.Add("aaa", "AAAAA");
-        //    //msg.errMsgDetailList.Add("bbb", "BBBBB");
-        //    //return Ok(msg);
-        //}
-
         private IConfiguration _config;
 
         public AccountController(IConfiguration config)
@@ -54,8 +40,8 @@ namespace reactCore3A.Controllers
                     roles = "Guest,User,Manager,Admin",
                     authGuid = Guid.NewGuid()
                 };
-
-                this.HttpContext.Session.Set("LoginUserInfo", SerializeToMemory(user));
+                
+                this.HttpContext.Session.Set("LoginUserInfo", Utilities.SerializeToMemory(user));
 
                 return true;
             }
@@ -105,31 +91,23 @@ namespace reactCore3A.Controllers
             return serializeToken;
         }
 
-        private static byte[] SerializeToMemory(object o)
-        {
-            MemoryStream stream = new MemoryStream();
-            IFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, o);
-            byte[] blob = stream.ToArray();
-            return blob;
-        }
+        //private static byte[] SerializeToMemory(object o)
+        //{
+        //    MemoryStream stream = new MemoryStream();
+        //    IFormatter formatter = new BinaryFormatter();
+        //    formatter.Serialize(stream, o);
+        //    byte[] blob = stream.ToArray();
+        //    return blob;
+        //}
 
-        private static T DeserializeFromMemory<T>(byte[] blob)
-        {
-            MemoryStream stream = new MemoryStream(blob);
-            IFormatter formatter = new BinaryFormatter();
-            stream.Seek(0, SeekOrigin.Begin);
-            T obj = (T)formatter.Deserialize(stream);
-            return obj;
-        }
-
-        private static object DeserializeFromStream(MemoryStream stream)
-        {
-            IFormatter formatter = new BinaryFormatter();
-            stream.Seek(0, SeekOrigin.Begin);
-            object o = formatter.Deserialize(stream);
-            return o;
-        }
+        //private static T DeserializeFromMemory<T>(byte[] blob)
+        //{
+        //    MemoryStream stream = new MemoryStream(blob);
+        //    IFormatter formatter = new BinaryFormatter();
+        //    stream.Seek(0, SeekOrigin.Begin);
+        //    T obj = (T)formatter.Deserialize(stream);
+        //    return obj;
+        //}
 
         [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
@@ -138,7 +116,7 @@ namespace reactCore3A.Controllers
 
             if (isAuthed)
             {
-                var user = DeserializeFromMemory<UserModel>(this.HttpContext.Session.Get("LoginUserInfo"));
+                var user = Utilities.DeserializeFromMemory<UserModel>(this.HttpContext.Session.Get("LoginUserInfo"));
                 var token = GenerateJsonWebToken(user);
                 Response.Cookies.Append("AuthToken", token);
                 return Ok(new { token });
