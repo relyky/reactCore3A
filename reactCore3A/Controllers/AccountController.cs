@@ -48,7 +48,8 @@ namespace reactCore3A.Controllers
                     userId = "abc",
                     userName = "郝聰明",
                     mima = "xxx",
-                    email = "abc@email.server"
+                    email = "abc@email.server",
+                    roles = "Guest,User,Manager,Admin"
                 };
             }
 
@@ -57,31 +58,44 @@ namespace reactCore3A.Controllers
 
         private string GenerateJsonWebToken(UserModel userInfo)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Jwt:Key"]));
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            DateTime notBefore = DateTime.Now;
-            DateTime expires = _config["Jwt:ExpireMinutes"] != null
-                ? notBefore.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]))
-                : notBefore.AddMinutes(30);
-
+            // 聲名：依登入人員資訊填入
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.userId),
                 new Claim(JwtRegisteredClaimNames.GivenName, userInfo.userName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("roles", userInfo.roles) // 自訂聲名欄位 
             };
 
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Issuer"],
-                claims,
-                notBefore,
-                expires,
-                signingCredentials);
+            // 建立一組對稱式加密的金鑰，主要用於 JWT 簽章之用
+            // HmacSha256 有要求必須要大於 128 bits，所以 key 不能太短，至少要 16 字元以上
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Jwt:Key"]));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
-            string encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-            return encodedToken;
+            // 計算有效時間
+            DateTime now = DateTime.Now;
+            DateTime expires = _config["Jwt:ExpireMinutes"] != null
+                ? now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]))
+                : now.AddMinutes(30);
+
+            // 建立 SecurityTokenDescriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _config["Jwt:Issuer"],
+                Audience = _config["Jwt:Issuer"], // 由於你的 API 受眾通常沒有區分特別對象，因此通常不太需要設定，也不太需要驗證
+                NotBefore = now, // 預設值就是 DateTime.Now
+                IssuedAt = now, // 預設值就是 DateTime.Now
+                Subject = new ClaimsIdentity(claims),
+                Expires = expires,
+                SigningCredentials = signingCredentials
+            };
+
+            // 產出所需要的 JWT securityToken 物件，並取得序列化後的 Token 結果(字串格式)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var serializeToken = tokenHandler.WriteToken(securityToken);
+
+            return serializeToken;
         }
 
         [HttpPost("[action]")]
@@ -100,21 +114,26 @@ namespace reactCore3A.Controllers
 
         [Authorize]
         [HttpPost("[action]")]
-        public IActionResult GetLoginInfo() 
+        public IActionResult GetLoginInfo()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var claimList = identity.Claims.ToList();
+            //var claimList = identity.Claims.ToList();
+            var claims = identity.Claims.ToDictionary<Claim, string, string>(
+                c => c.Properties.Count > 0 ? c.Properties.First().Value : c.Type, 
+                c => c.Value);
 
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            DateTime iss = origin.AddSeconds(double.Parse(claimList[4].Value));
-            DateTime exp = origin.AddSeconds(double.Parse(claimList[5].Value));
+            DateTime iat = origin.AddSeconds(double.Parse(claims["iat"]));
+            DateTime exp = origin.AddSeconds(double.Parse(claims["exp"]));
 
-            var loginInfo = new {
-                loginUserId = claimList[0].Value,
-                loginUserName= claimList[1].Value,
-                loginUserEmail = claimList[2].Value,
-                loginAuthUuid = claimList[3].Value,
-                loginAuthTime = iss.ToLocalTime().ToString("yyyy\\/MM\\/dd HH:mm:ss"),
+            var loginInfo = new
+            {
+                loginUserId = claims["sub"],
+                loginUserName = claims["given_name"],
+                loginUserEmail = claims["email"],
+                loginUserRoles = claims["roles"],
+                loginAuthUuid = claims["jti"],
+                loginAuthIssuedAt = iat.ToLocalTime().ToString("yyyy\\/MM\\/dd HH:mm:ss"),
                 loginAuthExpires = exp.ToLocalTime().ToString("yyyy\\/MM\\/dd HH:mm:ss")
             };
 
@@ -124,12 +143,11 @@ namespace reactCore3A.Controllers
         /// <summary>
         /// for tseting
         /// </summary>
-        /// <returns></returns>
         [Authorize]
         [HttpPost("[action]")]
-        public IEnumerable<string> GetValues() 
+        public IEnumerable<string> GetValues()
         {
-            return new string[] {"Foo","Bar","Baz","今天天氣真好。" };
+            return new string[] { "Foo", "Bar", "Baz", "今天天氣真好。" };
         }
 
     }

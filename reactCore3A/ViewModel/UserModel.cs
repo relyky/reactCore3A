@@ -11,5 +11,6 @@ namespace reactCore3A.ViewModel
         public string userName { get; set; }
         public string mima { get; set; }
         public string email { get; set; }
+        public string roles { get; set; }
     }
 }
