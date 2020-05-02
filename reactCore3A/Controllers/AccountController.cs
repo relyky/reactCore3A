@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using reactCore3A.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace reactCore3A.Controllers
 {
@@ -37,23 +40,27 @@ namespace reactCore3A.Controllers
             _config = config;
         }
 
-        private UserModel AuthenticateUser(LoginInfo login)
+        private bool AuthenticateUser(LoginInfo login)
         {
-            UserModel user = null;
-
+            // 模擬登入檢查
             if (login.userId == "abc" && login.credential == "def")
             {
-                user = new UserModel
+                UserModel user = new UserModel
                 {
                     userId = "abc",
                     userName = "郝聰明",
                     mima = "xxx",
                     email = "abc@email.server",
-                    roles = "Guest,User,Manager,Admin"
+                    roles = "Guest,User,Manager,Admin",
+                    authGuid = Guid.NewGuid()
                 };
+
+                this.HttpContext.Session.Set("LoginUserInfo", SerializeToMemory(user));
+
+                return true;
             }
 
-            return user;
+            return false;
         }
 
         private string GenerateJsonWebToken(UserModel userInfo)
@@ -63,7 +70,7 @@ namespace reactCore3A.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.userId),
                 new Claim(JwtRegisteredClaimNames.GivenName, userInfo.userName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, userInfo.authGuid.ToString()),
                 new Claim("roles", userInfo.roles) // 自訂聲名欄位 
             };
 
@@ -98,14 +105,42 @@ namespace reactCore3A.Controllers
             return serializeToken;
         }
 
+        private static byte[] SerializeToMemory(object o)
+        {
+            MemoryStream stream = new MemoryStream();
+            IFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, o);
+            byte[] blob = stream.ToArray();
+            return blob;
+        }
+
+        private static T DeserializeFromMemory<T>(byte[] blob)
+        {
+            MemoryStream stream = new MemoryStream(blob);
+            IFormatter formatter = new BinaryFormatter();
+            stream.Seek(0, SeekOrigin.Begin);
+            T obj = (T)formatter.Deserialize(stream);
+            return obj;
+        }
+
+        private static object DeserializeFromStream(MemoryStream stream)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            stream.Seek(0, SeekOrigin.Begin);
+            object o = formatter.Deserialize(stream);
+            return o;
+        }
+
         [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
         {
-            var user = this.AuthenticateUser(login);
+            bool isAuthed = this.AuthenticateUser(login);
 
-            if (user != null)
+            if (isAuthed)
             {
+                var user = DeserializeFromMemory<UserModel>(this.HttpContext.Session.Get("LoginUserInfo"));
                 var token = GenerateJsonWebToken(user);
+                Response.Cookies.Append("AuthToken", token);
                 return Ok(new { token });
             }
 
@@ -140,6 +175,21 @@ namespace reactCore3A.Controllers
             return Ok(loginInfo);
         }
 
+        [Authorize]
+        [HttpPost("[action]")]
+        public IActionResult RefreshCookie() 
+        {
+            List<KeyValuePair<string, string>> cookieList = new List<KeyValuePair<string, string>>();
+            foreach (var cookie in Request.Cookies) 
+            {
+                cookieList.Add(cookie);
+            }
+
+            Response.Cookies.Append("testcookie1", DateTime.Now.ToString("HH:mm:ss"));
+
+            return Ok(cookieList);
+        }
+
         /// <summary>
         /// for tseting
         /// </summary>
@@ -149,6 +199,5 @@ namespace reactCore3A.Controllers
         {
             return new string[] { "Foo", "Bar", "Baz", "今天天氣真好。" };
         }
-
     }
 }

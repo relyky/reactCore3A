@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace reactCore3A
@@ -62,6 +63,11 @@ namespace reactCore3A
 
             services.AddMvc();
 
+            services.AddSession(optons =>
+            {
+                optons.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));
+            });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -83,6 +89,8 @@ namespace reactCore3A
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseRouting();
             app.UseAuthentication();

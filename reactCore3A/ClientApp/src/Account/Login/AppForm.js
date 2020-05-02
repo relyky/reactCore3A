@@ -61,9 +61,16 @@ export default function AppForm({ formProfile }) {
         })
     }
 
+    function handleRefreshCookie() {
+        postData('RefreshCookie').then(data => {
+            assignMeta({ cookieList: data })
+        })
+    }
+
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (
         <div>
+            <h1 style={{color:'red'}}>Auth Token的逾期檢查無效果</h1>
             <InputText name="userId" type="text" value={formData.userId}
                 onChange={assignValue}
                 placeholder="帳號" />
@@ -75,6 +82,8 @@ export default function AppForm({ formProfile }) {
             <button onClick={handleGetLoginInfo}>Login Info</button>
             <hr />
             <button onClick={handleGetValues}>values</button>
+            <hr />
+            <button onClick={handleRefreshCookie}>Refresh Cookie</button>
             <hr />
             <pre>
                 <h4>meta</h4>
