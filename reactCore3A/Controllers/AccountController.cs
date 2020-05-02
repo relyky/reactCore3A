@@ -67,9 +67,7 @@ namespace reactCore3A.Controllers
 
             // 計算有效時間
             DateTime now = DateTime.Now;
-            DateTime expires = _config["Jwt:ExpireMinutes"] != null
-                ? now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]))
-                : now.AddMinutes(30);
+            DateTime expires = now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]));
 
             // 建立 SecurityTokenDescriptor
             var tokenDescriptor = new SecurityTokenDescriptor

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -65,9 +66,14 @@ namespace reactCore3A
 
             // 將 Session 存在 ASP.NET Core 記憶體中
             services.AddDistributedMemoryCache();
-            services.AddSession(optons =>
+            services.AddSession(options =>
             {
-                optons.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));
+                // 沒必要將 Server 或網站技術的資訊爆露在外面，所以預設 Session 名稱 .AspNetCore.Session 可以改掉。
+                options.Cookie.Name = ".AspNetCore.Session";
+                // 修改合理的 Session 到期時間。預設是 20 分鐘沒有跟 Server 互動的 Request，就會將 Session 變成過期狀態。
+                options.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));
+                // 限制只有在 HTTPS 連線的情況下，才允許使用 Session。如此一來變成加密連線，就不容易被攔截。
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             // In production, the React files will be served from this directory
