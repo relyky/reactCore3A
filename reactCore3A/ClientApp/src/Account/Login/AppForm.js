@@ -70,7 +70,10 @@ export default function AppForm({ formProfile }) {
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (
         <div>
-            <h1 style={{color:'red'}}>Auth Token的逾期檢查無效果</h1>
+            <h2 style={{ color: 'red' }}>Auth Token的逾期檢查無效果</h2>
+            <h2 style={{ color: 'red' }}>Auth Cookie 安全性設定未處理</h2>
+            <h2 style={{ color: 'red' }}>EF Core 3.1.3不易導入，與EF6相似不相容</h2>
+
             <InputText name="userId" type="text" value={formData.userId}
                 onChange={assignValue}
                 placeholder="帳號" />
