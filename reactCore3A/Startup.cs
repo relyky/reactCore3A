@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,9 +31,23 @@ namespace reactCore3A
 
             services.AddControllersWithViews();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            /// 
+            /// 允許Cookie-based 或 JWT-based 身份驗證, 以Cookie-based為預設
+            /// 
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options=> {
+                    //## Cookie-based 身分驗證機制
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.LogoutPath = new PathString("/Account/Logout");
+                    options.ReturnUrlParameter = "ReturnUrl";
+                    //用戶頁面停留太久，登入逾期，或Controller中用戶登入時機點也可以設定↓
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(Configuration.GetValue<double>("Jwt:ExpireMinutes"));//沒給預設14天
+                })
                 .AddJwtBearer(options =>
                 {
+                    //## JWT token based authentication
+
                     // 當驗證失敗時，回應標頭會包含 WWW-Authenticate 標頭，這裡會顯示失敗的詳細錯誤原因
                     options.IncludeErrorDetails = true; // 預設值為 true，有時會特別關閉
 
@@ -86,6 +101,7 @@ namespace reactCore3A
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // 以下順序不可隨意變更
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

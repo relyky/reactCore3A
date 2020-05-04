@@ -34,12 +34,14 @@ namespace reactCore3A.ViewModel
         public const string EXCEPTION = "EXCEPTION";
         #endregion
 
+        #region properties
         public string errType { get; set; }
         //public ErrTypeEnum errType { get; set; }
         public string errMsg { get; set; }
         public DateTime errDtm { get; set; }
         public string errClass { get; set; }
         public Dictionary<string,string> errMsgDetailList { get; set; }
+        #endregion
 
         public LastErrMsg(string errMsg, string errType = ERROR) {
             this.errType = errType;

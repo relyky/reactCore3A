@@ -48,6 +48,10 @@ export default function AppForm({ formProfile }) {
         })
     }
 
+    function handleLogout() {
+        postData('Logout').then(console.log);
+    }
+
     function handleGetLoginInfo() {
         postData('GetLoginInfo').then(data => {
             //console.log('handleGetUserInfo', data)
@@ -57,7 +61,10 @@ export default function AppForm({ formProfile }) {
 
     function handleGetValues() {
         postData('GetValues').then(data => {
+            //debugger
             assignMeta({ values: data })
+        }).catch(xhr => {
+            console.log('handleGetValues', xhr)
         })
     }
 
@@ -70,7 +77,6 @@ export default function AppForm({ formProfile }) {
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (
         <div>
-
             <InputText name="userId" type="text" value={formData.userId}
                 onChange={assignValue}
                 placeholder="帳號" />
@@ -78,6 +84,8 @@ export default function AppForm({ formProfile }) {
                 onChange={assignValue}
                 placeholder="密碼" />
             <button onClick={handleLogin}>登入</button>
+            <hr />
+            <button onClick={handleLogout}>登出</button>
             <hr />
             <button onClick={handleGetLoginInfo}>Login Info</button>
             <hr />

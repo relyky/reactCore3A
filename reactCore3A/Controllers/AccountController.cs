@@ -12,6 +12,10 @@ using Microsoft.IdentityModel.Tokens;
 using reactCore3A.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using reactCore3A.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
 
 namespace reactCore3A.Controllers
 {
@@ -26,7 +30,7 @@ namespace reactCore3A.Controllers
             _config = config;
         }
 
-        private bool AuthenticateUser(LoginInfo login)
+        private UserModel AuthenticateUser(LoginInfo login)
         {
             // 模擬登入檢查
             if (login.userId == "abc" && login.credential == "def")
@@ -40,15 +44,16 @@ namespace reactCore3A.Controllers
                     roles = "Guest,User,Manager,Admin",
                     authGuid = Guid.NewGuid()
                 };
-                
-                this.HttpContext.Session.SetObject("LoginUserInfo", user);
 
-                return true;
+                return user;
             }
 
-            return false;
+            return null;
         }
 
+        /// <summary>
+        /// JWT-base authorization
+        /// </summary>
         private string GenerateJsonWebToken(UserModel userInfo)
         {
             // 聲名：依登入人員資訊填入
@@ -67,7 +72,7 @@ namespace reactCore3A.Controllers
 
             // 計算有效時間
             DateTime now = DateTime.Now;
-            DateTime expires = now.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]));
+            DateTime expires = now.AddMinutes(_config.GetValue<double>("Jwt:ExpireMinutes"));
 
             // 建立 SecurityTokenDescriptor
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -89,17 +94,82 @@ namespace reactCore3A.Controllers
             return serializeToken;
         }
 
+        /// <summary>
+        /// Cookie-base authorization
+        /// </summary>
+        private void SigninWithCookieAuth(UserModel userInfo) 
+        {
+            // 計算有效時間
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            DateTime now = DateTime.UtcNow;
+            DateTime expires = now.AddMinutes(_config.GetValue<double>("Jwt:ExpireMinutes"));
+
+            double iat = Math.Floor(now.Subtract(origin).TotalSeconds);
+            double exp = Math.Floor(expires.Subtract(origin).TotalSeconds);
+
+            // 聲名：依登入人員資訊填入
+            var claims = new[] {
+                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.userId),
+                    new Claim(JwtRegisteredClaimNames.GivenName, userInfo.userName),
+                    new Claim(JwtRegisteredClaimNames.Email, userInfo.email),
+                    new Claim(JwtRegisteredClaimNames.Jti, userInfo.authGuid.ToString()),
+                    new Claim("roles", userInfo.roles), // 自訂聲名欄位 
+                    new Claim("iat", iat.ToString()),
+                    new Claim("exp", exp.ToString())
+                };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = false, 
+                ExpiresUtc = new DateTimeOffset(expires),
+                //AllowRefresh = <bool>,
+                //IssuedUtc = new DateTimeOffset(now),
+                //RedirectUri = <string>
+            };
+
+            this.HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProperties).Wait();
+        }
+
+        /// <summary>
+        /// Cookie-based 身分驗證機制
+        /// </summary>
         [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
         {
-            bool isAuthed = this.AuthenticateUser(login);
+            UserModel user = this.AuthenticateUser(login);
 
-            if (isAuthed)
+            if (user != null)
             {
-                var user = this.HttpContext.Session.GetObject<UserModel>("LoginUserInfo");
+                this.HttpContext.Session.SetObject("LoginUserInfo", user);
+                //var user = this.HttpContext.Session.GetObject<UserModel>("LoginUserInfo");
+                this.SigninWithCookieAuth(user);
+                return Ok();
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult Logout()
+        {
+            this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
+            return Ok(new LastErrMsg("已登出系統", LastErrMsg.SUCCESS));
+        }
+
+        /// <summary>
+        /// JWT token based authentication
+        /// </summary>
+        [HttpPost("[action]")]
+        public IActionResult RequestBearer(LoginInfo login)
+        {
+            UserModel user = this.AuthenticateUser(login);
+
+            if (user != null)
+            {
                 var token = GenerateJsonWebToken(user);
-                Response.Cookies.Append("AuthToken", token);
-                return Ok(new { token });
+                return Ok(token);
             }
 
             return Unauthorized();
@@ -112,7 +182,7 @@ namespace reactCore3A.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             //var claimList = identity.Claims.ToList();
             var claims = identity.Claims.ToDictionary<Claim, string, string>(
-                c => c.Properties.Count > 0 ? c.Properties.First().Value : c.Type, 
+                c => c.Properties.Count > 0 ? c.Properties.First().Value : c.Type,
                 c => c.Value);
 
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -135,10 +205,10 @@ namespace reactCore3A.Controllers
 
         [Authorize]
         [HttpPost("[action]")]
-        public IActionResult RefreshCookie() 
+        public IActionResult RefreshCookie()
         {
             List<KeyValuePair<string, string>> cookieList = new List<KeyValuePair<string, string>>();
-            foreach (var cookie in Request.Cookies) 
+            foreach (var cookie in Request.Cookies)
             {
                 cookieList.Add(cookie);
             }
