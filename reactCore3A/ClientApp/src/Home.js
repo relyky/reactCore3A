@@ -15,9 +15,8 @@ export default function Home(props) {
     //console.log('Home', { appInfo })
     return (
         <div className="App">
-            <h3 style={{ color: 'red' }}>Auth Token的逾期檢查無效果</h3>
-            <h3 style={{ color: 'red' }}>Auth Cookie 安全性設定未處理</h3>
-            <h3 style={{ color: 'red' }}>透過WCF建立商業級服務API也去取存DB，因為EF Core 3.1.3成熟度仍不夠。</h3>
+            <h3 style={{ color: 'red' }}>Bearer Token的逾期檢查無效果</h3>
+            <h3 style={{ color: 'red' }}>透過WCF建立商業級服務API也去取存DB，因為EntityFx Core 3.1.3成熟度仍不夠。</h3>
 
             <header className="App-header">
                 <h1>Brand Logo</h1>

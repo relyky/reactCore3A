@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace reactCore3A
 {
@@ -43,6 +44,13 @@ namespace reactCore3A
                     options.ReturnUrlParameter = "ReturnUrl";
                     //用戶頁面停留太久，登入逾期，或Controller中用戶登入時機點也可以設定↓
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(Configuration.GetValue<double>("Jwt:ExpireMinutes"));//沒給預設14天
+                    //改變預設的導頁轉址行為，變成回應401 Unauthorized，即改變“/Account/Login?ReturnURL=xxxx”的行為。
+                    options.Events.OnRedirectToLogin = (context) =>
+                    {
+                        // Disabling Automatic Challenge
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    };
                 })
                 .AddJwtBearer(options =>
                 {

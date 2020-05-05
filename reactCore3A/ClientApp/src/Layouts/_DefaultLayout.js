@@ -28,19 +28,19 @@ export default function DefaultLayout(props) {
             <nav>
                 <h4>功能連結：</h4>
                 <ul>
-                    <li>
+                    <li style={menuItemStyle}>
                         <Link to="/">Home</Link>
                     </li>
-                    <li>
+                    <li style={menuItemStyle}>
                         <Link to="/Login">Login</Link>
                     </li>
-                    <li>
+                    <li style={menuItemStyle}>
                         <Link to="/ap010101">AP010101</Link>
                     </li>
-                    <li>
+                    <li style={menuItemStyle}>
                         <Link to="/ap010102">AP010102</Link>
                     </li>
-                    <li>
+                    <li style={menuItemStyle}>
                         <Link to="/ap010103">AP010103</Link>
                     </li>
                 </ul>
@@ -50,4 +50,10 @@ export default function DefaultLayout(props) {
             </main>
         </div>
     )
+}
+
+// CSS Style
+const menuItemStyle = {
+    display: 'inline-block',
+    marginLeft: '1em'
 }
