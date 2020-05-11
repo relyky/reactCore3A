@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "rimraf ./build && env-cmd react-scripts start",
-    "build": "env-cmd react-scripts build",
+    "build": "rimraf ./build && env-cmd react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
