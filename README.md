@@ -7,6 +7,7 @@ React-Hooks
 # 特性
 * Hot loading   
 * Debugging JavaScript in the IDE   
+* 與Visual Stuido IDE整合
 
 # DB Access: EF Core 3
 * 支援CLI指令建立同步資料庫的ORM-schema，但尚無視覺化工具支援。   
