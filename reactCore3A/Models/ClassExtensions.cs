@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,14 @@ namespace reactCore3A.Models
     {
         public static void SetObject(this ISession session, string key, object value)
         {
-            session.Set(key, Utilities.SerializeToMemory(value));
+            session.SetString(key, JsonConvert.SerializeObject(value));
+            //session.Set(key, Utilities.SerializeToMemory(value));
         }
 
         public static T GetObject<T>(this ISession session, string key)
         {
-            return Utilities.DeserializeFromMemory<T>(session.Get(key));
+            return JsonConvert.DeserializeObject<T>(session.GetString(key));
+            //return Utilities.DeserializeFromMemory<T>(session.Get(key));
         }
     }
 }

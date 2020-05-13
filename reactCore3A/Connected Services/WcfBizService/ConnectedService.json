@@ -3,14 +3,14 @@
   "Version": "15.0.40203.910",
   "ExtendedData": {
     "inputs": [
-      "http://localhost:9311/Service1.svc"
+      "http://localhost:9311/AccountSvc.svc"
     ],
     "collectionTypes": [
       "System.Array",
       "System.Collections.Generic.Dictionary`2"
     ],
     "namespaceMappings": [
-      "*, WcfBizClient"
+      "*, WcfBizService"
     ],
     "references": [
       "dotnet-aspnet-codegenerator-design, {Microsoft.VisualStudio.Web.CodeGeneration.Design, 3.1.2}",
@@ -118,6 +118,7 @@
       "System.Xml.ReaderWriter, {System.Xml.ReaderWriter, 4.3.0}",
       "System.Xml.XDocument, {System.Xml.XDocument, 4.3.0}"
     ],
+    "sync": true,
     "targetFramework": "netcoreapp3.1",
     "typeReuseMode": "All"
   }

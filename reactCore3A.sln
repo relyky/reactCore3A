@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reactCore3A", "reactCore3A\reactCore3A.csproj", "{2E8C286E-D45F-4CC7-A756-D9C550BEA11A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfBizService", "WcfBizService\WcfBizService.csproj", "{DB816663-3AC9-41E3-A172-C26BA785F708}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfBizService", "WcfBizService\WcfBizService.csproj", "{0EEE5A93-67E4-4BF1-AD56-53FC738DFE2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,16 +17,16 @@ Global
 		{2E8C286E-D45F-4CC7-A756-D9C550BEA11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E8C286E-D45F-4CC7-A756-D9C550BEA11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E8C286E-D45F-4CC7-A756-D9C550BEA11A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB816663-3AC9-41E3-A172-C26BA785F708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB816663-3AC9-41E3-A172-C26BA785F708}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB816663-3AC9-41E3-A172-C26BA785F708}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB816663-3AC9-41E3-A172-C26BA785F708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EEE5A93-67E4-4BF1-AD56-53FC738DFE2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EEE5A93-67E4-4BF1-AD56-53FC738DFE2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EEE5A93-67E4-4BF1-AD56-53FC738DFE2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EEE5A93-67E4-4BF1-AD56-53FC738DFE2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DDF4DA9F-30D4-4543-9F7C-C87FF50280A5}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {DDF4DA9F-30D4-4543-9F7C-C87FF50280A5}
 	EndGlobalSection
 EndGlobal

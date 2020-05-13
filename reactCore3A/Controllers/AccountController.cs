@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
+using WcfBizService;
 
 namespace reactCore3A.Controllers
 {
@@ -24,31 +25,9 @@ namespace reactCore3A.Controllers
     public class AccountController : ControllerBase
     {
         private IConfiguration _config;
-
         public AccountController(IConfiguration config)
         {
             _config = config;
-        }
-
-        private UserModel AuthenticateUser(LoginInfo login)
-        {
-            // 模擬登入檢查
-            if (login.userId == "abc" && login.credential == "def")
-            {
-                UserModel user = new UserModel
-                {
-                    userId = "abc",
-                    userName = "郝聰明",
-                    mima = "xxx",
-                    email = "abc@email.server",
-                    roles = "Guest,User,Manager,Admin",
-                    authGuid = Guid.NewGuid()
-                };
-
-                return user;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -138,8 +117,9 @@ namespace reactCore3A.Controllers
         [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
         {
-            UserModel user = this.AuthenticateUser(login);
+            var accSvc = new AccountSvcClient();
 
+            UserModel user = accSvc.AuthenticateUser(login);
             if (user != null)
             {
                 this.HttpContext.Session.SetObject("LoginUserInfo", user);
@@ -148,6 +128,7 @@ namespace reactCore3A.Controllers
                 return Ok();
             }
 
+            accSvc.CloseAsync();
             return Unauthorized();
         }
 
@@ -164,7 +145,8 @@ namespace reactCore3A.Controllers
         [HttpPost("[action]")]
         public IActionResult RequestBearer(LoginInfo login)
         {
-            UserModel user = this.AuthenticateUser(login);
+            var accSvc = new AccountSvcClient();
+            UserModel user = accSvc.AuthenticateUser(login);
 
             if (user != null)
             {
@@ -172,6 +154,7 @@ namespace reactCore3A.Controllers
                 return Ok(token);
             }
 
+            accSvc.CloseAsync();
             return Unauthorized();
         }
 
