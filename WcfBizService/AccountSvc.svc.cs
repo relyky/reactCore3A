@@ -27,7 +27,23 @@ namespace WcfBizService
                     userName = "郝聰明",
                     mima = "xxx",
                     email = "abc@email.server",
-                    roles = "Guest,User,Manager,Admin",
+                    roles = "User,Manager,Admin",
+                    authGuid = Guid.NewGuid()
+                };
+
+                return user;
+            }
+
+            // 模擬登入檢查
+            if (login.userId == "xyz" && login.credential == "123")
+            {
+                UserModel user = new UserModel
+                {
+                    userId = "xyz",
+                    userName = "甄美麗",
+                    mima = "xxx",
+                    email = "xyz@email.server",
+                    roles = "User",
                     authGuid = Guid.NewGuid()
                 };
 

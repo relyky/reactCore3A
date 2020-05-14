@@ -43,10 +43,20 @@ export default function AppForm() {
         })
     }
 
+    function testDiSample() {
+        const args = {}
+        postData('/api/CommonData/GetSysEnv', args).then(diSample => {
+            assignMeta({ diSample})
+        })
+    }
+
     console.log('AP010103', { appInfo, formData, meta, error })
     const { dataList } = meta
     return (
         <div>
+            <hr />
+            <button onClick={testDiSample}>測試DI</button>
+            <pre>{JSON.stringify(meta.diSample)}</pre>
             <hr />
             <input type='text' value={args.type} onChange={(e) => setArgs({ type: e.target.value })} placeholder="請輸入C或E" />
             {f_WeekLoading && <span>Week Loading...</span>}

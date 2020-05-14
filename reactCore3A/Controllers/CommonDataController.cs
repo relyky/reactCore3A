@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using reactCore3A.Models;
 
 namespace reactCore3A.Controllers
 {
@@ -13,8 +14,14 @@ namespace reactCore3A.Controllers
     [ApiController]
     public class CommonDataController : ControllerBase
     {
-        [HttpPost]
-        [Route("[Action]")]
+        private readonly ISysEnv _env;
+
+        public CommonDataController(ISysEnv env)
+        {
+            _env = env;
+        }
+
+        [HttpPost("[Action]")]
         public IActionResult GetWeekList(GetWeekListArgs args)
         {
             Dictionary<string, string> codeList = new Dictionary<string, string>();
@@ -52,6 +59,14 @@ namespace reactCore3A.Controllers
         public class GetWeekListArgs
         {
             public string type { get; set; }
+        }
+
+        [HttpPost("[Action]")]
+        public IActionResult GetSysEnv() 
+        {
+            return Ok(new {
+                _env.LoginUser,
+            });        
         }
     }
 }

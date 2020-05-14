@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using reactCore3A.Models;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +25,9 @@ namespace reactCore3A
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
@@ -31,6 +35,10 @@ namespace reactCore3A
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
             services.AddControllersWithViews();
+
+            /// 從自訂元件中使用 HttpContext, ref→[https://docs.microsoft.com/zh-tw/aspnet/core/fundamentals/http-context?view=aspnetcore-3.1]
+            /// 將可注入：IHttpContextAccessor，以取得HttpContext。
+            services.AddHttpContextAccessor();
 
             /// 
             /// 允許Cookie-based 或 JWT-based 身份驗證, 以Cookie-based為預設
@@ -81,23 +89,39 @@ namespace reactCore3A
                         ValidateIssuerSigningKey = false,
 
                         // "1234567890123456" 應該從 IConfiguration 取得
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Jwt:Key"])),
                     };
                 });
 
             services.AddMvc();
 
-            // 將 Session 存在 ASP.NET Core 記憶體中
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                // 沒必要將 Server 或網站技術的資訊爆露在外面，所以預設 Session 名稱 .AspNetCore.Session 可以改掉。
-                options.Cookie.Name = ".AspNetCore.Session";
-                // 修改合理的 Session 到期時間。預設是 20 分鐘沒有跟 Server 互動的 Request，就會將 Session 變成過期狀態。
-                options.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));
-                // 限制只有在 HTTPS 連線的情況下，才允許使用 Session。如此一來變成加密連線，就不容易被攔截。
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            });
+            #region 不使用Core3.1的Session
+            ///
+            ///# 不使用Session，因為Core3.1的Session實作不完整，一般也不建意使用。
+            /// 一定要用Session請參考：[鐵人賽 Day20] ASP.NET Core 2 系列 - 快取機制及 Redis Session(https://blog.johnwu.cc/article/ironman-day20-asp-net-core-caching-redis-session.html)
+            /// [ASP.NET Core 中的分散式快取](https://docs.microsoft.com/zh-tw/aspnet/core/performance/caching/distributed?view=aspnetcore-3.1)
+            ///
+
+            ////# 將 Session 存在 ASP.NET Core 記憶體中
+            //services.AddDistributedMemoryCache();
+            //services.AddSession(options =>
+            //{
+            //    // 沒必要將 Server 或網站技術的資訊爆露在外面，所以預設 Session 名稱 .AspNetCore.Session 可以改掉。
+            //    options.Cookie.Name = ".AspNetCore.Session";
+            //    // 修改合理的 Session 到期時間。預設是 20 分鐘沒有跟 Server 互動的 Request，就會將 Session 變成過期狀態。
+            //    options.IdleTimeout = TimeSpan.FromMinutes(double.Parse(Configuration["Jwt:ExpireMinutes"]));
+            //    // 限制只有在 HTTPS 連線的情況下，才允許使用 Session。如此一來變成加密連線，就不容易被攔截。
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    options.Cookie.IsEssential = true;
+            //});
+            #endregion
+
+            /// 本機快取，使可注入：IMemoryCache。將應用於取代Session存放登入者資訊。
+            services.AddMemoryCache();
+
+            /// 注入自訂物件, 註冊DI(Dependency Injection)服務
+            /// 將用於取用登入者資訊，環境參數等等。為原Session的替代方案。
+            services.AddSingleton<ISysEnv, SysEnv>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -106,9 +130,14 @@ namespace reactCore3A
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            /// 使用 IApplicationBuilder 建立中介軟體管線
+            /// [中介軟體順序](https://docs.microsoft.com/zh-tw/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1#middleware-order)
+
             // 以下順序不可隨意變更
             if (env.IsDevelopment())
             {
@@ -122,12 +151,20 @@ namespace reactCore3A
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseCookiePolicy();
-            app.UseSession();
+
+            #region 不使用Core3.1的Session
+            ///# 不使用Session，因為Core3.1的Session實作不完整，一般也不建意使用。
+            ////// 一定要用Session請參考：[鐵人賽 Day20] ASP.NET Core 2 系列 - 快取機制及 Redis Session(https://blog.johnwu.cc/article/ironman-day20-asp-net-core-caching-redis-session.html)
+            //app.UseSession(); 
+            #endregion
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            // custom middleware
+            app.UseMiddleware<MyMiddleware>();
+    
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -144,6 +181,7 @@ namespace reactCore3A
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
         }
     }
 }

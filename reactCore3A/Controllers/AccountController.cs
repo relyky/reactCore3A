@@ -25,9 +25,11 @@ namespace reactCore3A.Controllers
     public class AccountController : ControllerBase
     {
         private IConfiguration _config;
-        public AccountController(IConfiguration config)
+        private ISysEnv _env;
+        public AccountController(IConfiguration config, ISysEnv env)
         {
             _config = config;
+            _env = env;
         }
 
         /// <summary>
@@ -122,8 +124,7 @@ namespace reactCore3A.Controllers
             UserModel user = accSvc.AuthenticateUser(login);
             if (user != null)
             {
-                this.HttpContext.Session.SetObject("LoginUserInfo", user);
-                //var user = this.HttpContext.Session.GetObject<UserModel>("LoginUserInfo");
+                _env.SetLoginUserInfo(user);
                 this.SigninWithCookieAuth(user);
                 return Ok();
             }
