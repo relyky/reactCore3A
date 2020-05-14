@@ -27,7 +27,7 @@ namespace WcfBizService
                     userName = "郝聰明",
                     mima = "xxx",
                     email = "abc@email.server",
-                    roles = "User,Manager,Admin",
+                    roles = "User,Manager,Admin", // "Guest,User,Manager,Admin"
                     authGuid = Guid.NewGuid()
                 };
 
@@ -43,7 +43,7 @@ namespace WcfBizService
                     userName = "甄美麗",
                     mima = "xxx",
                     email = "xyz@email.server",
-                    roles = "User",
+                    roles = "User", // "Guest,User,Manager,Admin"
                     authGuid = Guid.NewGuid()
                 };
 
