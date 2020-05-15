@@ -117,6 +117,9 @@ export default function AppForm({ formProfile }) {
 
 function InputText(props) {
     return (
-        <input {...props} onChange={e => props.onChange && props.onChange(e.target.name, e.target.value)} />
+        <input {...props}
+            value={props.value || ''}
+            onChange={e => props.onChange && props.onChange(e.target.name, e.target.value)}
+        />
     )
 }
