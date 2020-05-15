@@ -1,12 +1,16 @@
 ﻿import React, { useState, useEffect } from 'react'
 import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
 
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
+
+// resource
+const cookies = new Cookies();
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
@@ -69,9 +73,11 @@ export default function AppForm({ formProfile }) {
     }
 
     function handleRefreshCookie() {
-        postData('RefreshCookie').then(data => {
-            assignMeta({ cookieList: data })
-        })
+        postData('RefreshCookie')
+            .then(console.log)
+            .finally(() => {
+                assignMeta({ cookieList: cookies.getAll() })
+            })
     }
 
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })

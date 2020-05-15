@@ -197,9 +197,11 @@ namespace reactCore3A.Controllers
                 cookieList.Add(cookie);
             }
 
-            Response.Cookies.Append("testcookie1", DateTime.Now.ToString("HH:mm:ss"));
+            string testcookie1 = DateTime.Now.ToString("HH:mm:ss");
+            Response.Cookies.Append("testcookie1", testcookie1);
 
-            return Ok(cookieList);
+            return Ok(new { testcookie1 });
+            //return Ok(cookieList); //<---cookie將跟隨封包回browser。
         }
 
         /// <summary>
