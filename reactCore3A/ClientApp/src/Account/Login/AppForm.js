@@ -1,17 +1,14 @@
 ﻿import React, { useState, useEffect } from 'react'
 import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
-import Cookies from 'universal-cookie'
+import { InputText } from 'widgets/InputText'
 
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
-import useMyCookies from 'Hooks/useCookies'
-
-// resource
-const cookies = new Cookies();
+import useCookies from 'Hooks/useCookies'
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
@@ -19,7 +16,7 @@ export default function AppForm({ formProfile }) {
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
 
-    const [mycookies] = useMyCookies()
+    const [cookies] = useCookies()
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -109,17 +106,8 @@ export default function AppForm({ formProfile }) {
             <hr/>
             <pre>
                 <h4>My Cookies</h4>
-                {JSON.stringify(mycookies, null, '  ')}
+                {JSON.stringify(cookies, null, '  ')}
             </pre>
         </div>
-    )
-}
-
-function InputText(props) {
-    return (
-        <input {...props}
-            value={props.value || ''}
-            onChange={e => props.onChange && props.onChange(e.target.name, e.target.value)}
-        />
     )
 }

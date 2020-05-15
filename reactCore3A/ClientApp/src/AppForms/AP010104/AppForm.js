@@ -1,12 +1,13 @@
 ﻿import React, { useEffect } from 'react'
 //import { showLastErrMsg } from 'Common/LastErrMsg'
+import { InputText } from 'widgets/InputText'
+
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 //import useMetaStore from 'Hooks/useMetaStore'
 //import usePostData from 'Hooks/usePostData'
 //import useLoad from 'Hooks/useLoad'
 import useCookies from 'Hooks/useCookies'
-import { InputText } from 'widgets/InputText'
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()

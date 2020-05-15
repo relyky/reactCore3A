@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react'
+﻿import React, { useState } from 'react'
 import Cookies from 'universal-cookie'
 
 // resource
@@ -6,14 +6,7 @@ const cksvc = new Cookies()
 
 export default function useCookies()
 {
-    const [cookies, setCookies] = useState({})
-    const origins = useRef({})
-
-    origins.current = cksvc.getAll()
-
-    useEffect(() => {
-        setCookies(origins.current)
-    }, [origins])
+    const [cookies, setCookies] = useState(cksvc.getAll())
 
     const setCookie = (name, value, options) => {
         // console.log('setCookie', { name, value, options })
