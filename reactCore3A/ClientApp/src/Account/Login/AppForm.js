@@ -8,6 +8,7 @@ import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
+import useMyCookies from 'Hooks/useCookies'
 
 // resource
 const cookies = new Cookies();
@@ -17,6 +18,8 @@ export default function AppForm({ formProfile }) {
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
+
+    const [mycookies] = useMyCookies()
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -102,6 +105,11 @@ export default function AppForm({ formProfile }) {
             <pre>
                 <h4>meta</h4>
                 {JSON.stringify(meta, null, '  ')}
+            </pre>
+            <hr/>
+            <pre>
+                <h4>My Cookies</h4>
+                {JSON.stringify(mycookies, null, '  ')}
             </pre>
         </div>
     )
