@@ -2,21 +2,22 @@
 import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
 import { InputText } from 'widgets/InputText'
+import Cookies from 'universal-cookie'
 
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
-import useCookies from 'Hooks/useCookies'
+
+// resource
+const cookies = new Cookies()
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
-
-    const [cookies] = useCookies()
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -73,8 +74,9 @@ export default function AppForm({ formProfile }) {
     }
 
     function handleRefreshCookie() {
+        /// use to refresh AccessToken etc.
         postData('RefreshCookie')
-            .then(console.log)
+            .then((data) => console.log('RefreshCookie', data))
             .finally(() => {
                 assignMeta({ cookieList: cookies.getAll() })
             })
@@ -102,11 +104,6 @@ export default function AppForm({ formProfile }) {
             <pre>
                 <h4>meta</h4>
                 {JSON.stringify(meta, null, '  ')}
-            </pre>
-            <hr/>
-            <pre>
-                <h4>My Cookies</h4>
-                {JSON.stringify(cookies, null, '  ')}
             </pre>
         </div>
     )
