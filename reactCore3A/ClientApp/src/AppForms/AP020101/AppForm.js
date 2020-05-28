@@ -17,7 +17,7 @@ export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
+    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -35,20 +35,19 @@ export default function AppForm({ formProfile }) {
         <div>
             <InputText name="idname" type="text" value={formData.idname}
                 onChange={assignValue}
-                placeholder="識別名稱" />
+                placeholder="識別名稱" /><br/>
             <InputText name="birthday" type="text" value={formData.birthday}
                 onChange={assignValue}
-                placeholder="生日" />
+                placeholder="生日" /><br />
             <InputText name="introduction" type="text" value={formData.introduction}
                 onChange={assignValue}
-                placeholder="自我介紹" />
+                placeholder="自我介紹" /><br />
             <InputText name="height" type="text" value={formData.height}
                 onChange={assignValue}
-                placeholder="身高" />
+                placeholder="身高" /><br />
             <InputText name="lastUpdDtm" type="text" value={formData.lastUpdDtm} readOnly
                 onChange={assignValue}
-                placeholder="異動時間" />
-            <hr />
+                placeholder="異動時間" /><br />
             <button onClick={handleSave}>存檔</button>
             <pre>
                 <h4>meta</h4>
