@@ -8,9 +8,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AppInfoProvider } from './Hooks/useAppInfo'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
+
+// resource
+const cookies = new Cookies()
 
 //axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['RequestVerificationToken'] = cookies.get('__RequestVerificationToken');
 
 ReactDOM.render(
     <BrowserRouter>

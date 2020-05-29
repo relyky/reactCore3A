@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +36,7 @@ namespace reactCore3A
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
+            // 有這行 才能用 MVC
             services.AddControllersWithViews(options => {
                 /// 全域加入 AntiforgeryToken 檢查
                 //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
@@ -43,10 +45,10 @@ namespace reactCore3A
             services.AddAntiforgery(options =>
             {
                 // Set Cookie properties using CookieBuilder properties†.
-                options.FormFieldName = "AntiforgeryFieldname";
-                options.HeaderName = "X-CSRF-TOKEN-HEADERNAME";
-                options.Cookie.Name = ".AspNetCore.Antiforgery."; // X-CSRF-TOKEN
+                options.FormFieldName = "__RequestVerificationToken";
+                options.HeaderName = "RequestVerificationToken";
                 options.SuppressXFrameOptionsHeader = false;
+                //options.Cookie.Name = ".AspNetCore.Antiforgery.ynF6Z8l01V0"
             });
 
             /// 從自訂元件中使用 HttpContext, ref→[https://docs.microsoft.com/zh-tw/aspnet/core/fundamentals/http-context?view=aspnetcore-3.1]
@@ -146,7 +148,7 @@ namespace reactCore3A
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery)
         {
             /// 使用 IApplicationBuilder 建立中介軟體管線
             /// [中介軟體順序](https://docs.microsoft.com/zh-tw/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1#middleware-order)
@@ -177,14 +179,24 @@ namespace reactCore3A
             
             // custom middleware
             app.UseMiddleware<MyMiddleware>();
-    
+
+            // 使用 IAntiforgery 設定 antiforgery 功能
+            app.Use(next => context =>
+            {
+                var tokens = antiforgery.GetAndStoreTokens(context);
+                context.Response.Cookies.Append(tokens.FormFieldName, tokens.RequestToken,
+                    new CookieOptions() { HttpOnly = false });
+
+                return next(context);
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-
+            
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
