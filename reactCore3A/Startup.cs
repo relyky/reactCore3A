@@ -37,6 +37,8 @@ namespace reactCore3A
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
+            services.AddRazorPages();
+
             // 有這行 才能用 MVC
             services.AddControllersWithViews(options =>
             {
@@ -208,6 +210,8 @@ namespace reactCore3A
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
