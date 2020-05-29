@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+﻿import React, { useEffect } from 'react'
 import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
 import { InputText } from 'widgets/InputText'
@@ -8,16 +8,16 @@ import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
-import useLoad from 'Hooks/useLoad'
+//import useLoad from 'Hooks/useLoad'
 
 // resource
 const cookies = new Cookies()
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData, { assignValue, assignProps }] = useFormData()
+    const [formData, { assignValue /*, assignProps*/ }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/Account', trace: false })
+    const [{ postData } /*, f_loading*/] = usePostData({ baseUrl: 'api/Account', trace: false })
 
     //## init.通報現在在那支作業
     useEffect(() => assignAppInfo({ ...formProfile }), [])
@@ -92,6 +92,7 @@ export default function AppForm({ formProfile }) {
                 onChange={assignValue}
                 placeholder="密碼" />
             <button onClick={handleLogin}>登入</button>
+            <button onClick={() => window.location.reload()}>重新刷新畫面</button>
             <hr />
             <button onClick={handleLogout}>登出</button>
             <hr />
@@ -99,7 +100,7 @@ export default function AppForm({ formProfile }) {
             <hr />
             <button onClick={handleGetValues}>values</button>
             <hr />
-            <button onClick={handleRefreshCookie}>Refresh Cookie</button>
+            <button onClick={handleRefreshCookie}>Refresh Cookie from server</button>
             <hr />
             <pre>
                 <h4>meta</h4>

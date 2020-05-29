@@ -1,26 +1,21 @@
-﻿import React, { useState, useEffect } from 'react'
-import { showLastErrMsg } from 'Common/LastErrMsg'
-import axios from 'axios'
+﻿import React, { useEffect } from 'react'
+//import { showLastErrMsg } from 'Common/LastErrMsg'
 import { InputText } from 'widgets/InputText'
-import Cookies from 'universal-cookie'
 
 import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
-import useLoad from 'Hooks/useLoad'
-
-// resource
-const cookies = new Cookies()
+//import useLoad from 'Hooks/useLoad'
 
 export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
-    const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
+    const [meta/*, { assignMeta }*/] = useMetaStore()
+    const [{ postData }/*, f_loading*/] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
 
     //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
+    useEffect(() => assignAppInfo({ ...formProfile }), [formProfile])
 
     function handleSave() {
         postData('SaveFormData', formData).then(newFormData => {

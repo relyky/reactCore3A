@@ -20,9 +20,9 @@ const initialFormData = {
 
 export default function AppForm() {
     const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData, { assignValue, assignProps }] = useFormData()
+    const [formData, { /*assignValue,*/ assignProps }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
-    const [{ postData }, f_loading] = usePostData({ baseUrl: 'api/WeatherForecast' })
+    const [{ postData }, /*f_loading*/] = usePostData({ baseUrl: 'api/WeatherForecast' })
 
     const [args, setArgs] = useState({ type: 'C' })
     const [weekList, f_WeekLoading, error] = useLoad('api/CommonData/GetWeekList', args)

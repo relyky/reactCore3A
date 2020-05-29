@@ -1,5 +1,5 @@
 ﻿import React, { createContext, useState, useContext, /*, useDebugValue*/ } from 'react'
-import t, { Schema } from 'typy'
+import t, { /*Schema*/ } from 'typy'
 
 //## resource
 const initAppInfo = {

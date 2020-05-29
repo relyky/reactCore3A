@@ -1,5 +1,6 @@
-﻿import React, { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { LastErrMsg /* ,unboxLastErrMsg, showLastErrMsg */ } from 'Common/LastErrMsg'
 
 /// 設定用於載入基本資料檔，如：code-name map, codeList
 export default function useLoad(url, args) {
@@ -18,11 +19,13 @@ export default function useLoad(url, args) {
             setError(null)
         }).catch(xhr => {
             console.error('useLoad:ERROR', xhr.response.data)
-            setError(xhr.response.data)
+            const lastErr = (xhr instanceof LastErrMsg) ? xhr
+                : new LastErrMsg(xhr.message, 'EXCEPTION', new Date(), null);
+            setError(lastErr)
         }).finally(() => {
             setLoading(false)
         })
-    }, [args])
+    }, [args,url])
 
     return [data, f_loading, error]
 }

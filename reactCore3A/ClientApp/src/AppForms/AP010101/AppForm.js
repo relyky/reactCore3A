@@ -18,8 +18,8 @@ const initialFormData = {
 
 export default function AppForm() {
     const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData, { assignValue, assignProps }] = useFormData()
-    const [meta, { assignMeta }] = useMetaStore()
+    const [formData, { /*assignValue,*/ assignProps }] = useFormData()
+    const [meta/*, { assignMeta }*/] = useMetaStore()
 
     //## init.
     useEffect(() => {

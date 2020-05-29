@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using reactCore3A.Models;
 using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,8 @@ namespace reactCore3A
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
             // 有這行 才能用 MVC
-            services.AddControllersWithViews(options => {
+            services.AddControllersWithViews(options =>
+            {
                 /// 全域加入 AntiforgeryToken 檢查
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
@@ -61,7 +63,8 @@ namespace reactCore3A
             /// 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options=> {
+                .AddCookie(options =>
+                {
                     //## Cookie-based 身分驗證機制
                     options.LoginPath = new PathString("/Account/Login");
                     options.LogoutPath = new PathString("/Account/Logout");
@@ -177,16 +180,28 @@ namespace reactCore3A
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             // custom middleware
             app.UseMiddleware<MyMiddleware>();
 
             // 使用 IAntiforgery 設定 antiforgery 功能
             app.Use(next => context =>
             {
-                var tokens = antiforgery.GetAndStoreTokens(context);
-                context.Response.Cookies.Append(tokens.FormFieldName, tokens.RequestToken,
-                    new CookieOptions() { HttpOnly = false });
+                string path = context.Request.Path.Value;
+
+                // 只有幾個進入畫面可以取得 Antiforgery Token
+                if (String.Equals(path, "/", StringComparison.OrdinalIgnoreCase) ||
+                    String.Equals(path, "/index.html", StringComparison.OrdinalIgnoreCase) ||
+                    String.Equals(path, "/Login", StringComparison.OrdinalIgnoreCase))
+                {
+                    var tokens = antiforgery.GetAndStoreTokens(context);
+                    context.Response.Cookies.Append(tokens.FormFieldName, tokens.RequestToken,
+                        new CookieOptions()
+                        {
+                            HttpOnly = false,
+                            Expires = new DateTimeOffset(DateTime.Now.AddSeconds(5d))
+                        });
+                }
 
                 return next(context);
             });
@@ -197,7 +212,7 @@ namespace reactCore3A
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-            
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
