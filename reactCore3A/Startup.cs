@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,19 @@ namespace reactCore3A
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options => {
+                /// 全域加入 AntiforgeryToken 檢查
+                //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
+            services.AddAntiforgery(options =>
+            {
+                // Set Cookie properties using CookieBuilder properties†.
+                options.FormFieldName = "AntiforgeryFieldname";
+                options.HeaderName = "X-CSRF-TOKEN-HEADERNAME";
+                options.Cookie.Name = ".AspNetCore.Antiforgery."; // X-CSRF-TOKEN
+                options.SuppressXFrameOptionsHeader = false;
+            });
 
             /// 從自訂元件中使用 HttpContext, ref→[https://docs.microsoft.com/zh-tw/aspnet/core/fundamentals/http-context?view=aspnetcore-3.1]
             /// 將可注入：IHttpContextAccessor，以取得HttpContext。
@@ -93,7 +106,7 @@ namespace reactCore3A
                     };
                 });
 
-            services.AddMvc();
+            //services.AddMvc(); //<--- Core 2.2的東西
 
             #region 不使用Core3.1的Session
             ///

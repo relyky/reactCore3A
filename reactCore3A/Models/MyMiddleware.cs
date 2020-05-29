@@ -24,9 +24,10 @@ namespace reactCore3A.Models
         public async Task Invoke(HttpContext context)
         {
             //## Do something with context near the beginning of request processing.
+            Debug.WriteLine("MyMiddleware.OnInvoke");
+            // NLog.Trace....
 
             //## GO
-            // NLog.Trace....
             await _next.Invoke(context);
 
             //## Clean up.

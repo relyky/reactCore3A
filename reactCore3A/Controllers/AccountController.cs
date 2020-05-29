@@ -117,6 +117,7 @@ namespace reactCore3A.Controllers
         /// Cookie-based 身分驗證機制
         /// </summary>
         [HttpPost("[action]")]
+        [IgnoreAntiforgeryToken]
         public IActionResult Login(LoginInfo login)
         {
             var accSvc = new AccountSvcClient();
@@ -134,6 +135,7 @@ namespace reactCore3A.Controllers
         }
 
         [HttpPost("[action]")]
+        [IgnoreAntiforgeryToken]
         public IActionResult Logout()
         {
             this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
