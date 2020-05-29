@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 
 import useAppInfo from 'Hooks/useAppInfo'
@@ -17,7 +17,7 @@ export default function AppForm({ formProfile }) {
     const [weekList, f_WeekLoading, error] = useLoad('api/CommonData/GetWeekList', args)
 
     //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [formProfile])
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function qryDataList() {
         const args = { foo: 'foo' }

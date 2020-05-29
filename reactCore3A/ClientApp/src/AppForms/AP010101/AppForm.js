@@ -11,9 +11,7 @@ export default function AppForm({ formProfile }) {
     const [meta /*, { assignMeta }*/] = useMetaStore()
 
     //## init.通報現在在那支作業
-    useEffect(() => {
-        assignAppInfo({ ...formProfile })
-    }, [])
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     async function swalPrompt() {
         const { value: password } = await swal.fire({

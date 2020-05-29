@@ -15,7 +15,7 @@ export default function AppForm({ formProfile }) {
     const [{ postData }/*, f_loading*/] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
 
     //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [formProfile])
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function handleSave() {
         postData('SaveFormData', formData).then(newFormData => {

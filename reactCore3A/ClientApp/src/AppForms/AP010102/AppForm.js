@@ -13,7 +13,7 @@ export default function AppForm({ formProfile }) {
     const [meta, /*{ assignMeta }*/] = useMetaStore()
 
     //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [formProfile])
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (
