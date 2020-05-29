@@ -5,29 +5,15 @@ import useAppInfo from 'Hooks/useAppInfo'
 import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 
-const formProfile = {
-    FORM_ID:'AP010101',
-    FORM_TITLE: 'Say hi',
-    FORM_DESCRIPTION: '歡迎光臨。'
-}
-
-const initialFormData = {
-    foo: 'foo',
-    bar: 987654321
-}
-
-export default function AppForm() {
+export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData, { /*assignValue,*/ assignProps }] = useFormData()
-    const [meta/*, { assignMeta }*/] = useMetaStore()
+    const [formData /*, {assignValue, assignProps} */] = useFormData()
+    const [meta /*, { assignMeta }*/] = useMetaStore()
 
-    //## init.
+    //## init.通報現在在那支作業
     useEffect(() => {
-        // 通報現在在那支作業
         assignAppInfo({ ...formProfile })
-        // 初始化
-        assignProps(initialFormData)
-    },[])
+    }, [])
 
     async function swalPrompt() {
         const { value: password } = await swal.fire({
@@ -47,7 +33,7 @@ export default function AppForm() {
         }
     } 
 
-    console.log('AP010101', { appInfo, formData, meta })
+    console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (
         <div>
             <button onClick={() => swal.fire({

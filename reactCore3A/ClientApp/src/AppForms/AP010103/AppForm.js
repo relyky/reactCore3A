@@ -7,34 +7,17 @@ import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
 
-const formProfile = {
-    FORM_ID: 'AP010103',
-    FORM_TITLE: '通訊測試',
-    FORM_DESCRIPTION: '通訊測試說明。'
-}
-
-const initialFormData = {
-    foo: 'foo',
-    bar: 987654321
-}
-
-export default function AppForm() {
+export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData, { /*assignValue,*/ assignProps }] = useFormData()
+    const [formData /*,{ assignValue, assignProps }*/] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData }, /*f_loading*/] = usePostData({ baseUrl: 'api/WeatherForecast' })
 
     const [args, setArgs] = useState({ type: 'C' })
     const [weekList, f_WeekLoading, error] = useLoad('api/CommonData/GetWeekList', args)
 
-    //## init.
-    useEffect(() => {
-        // 通報現在在那支作業
-        assignAppInfo({ ...formProfile })
-        // 初始化
-        assignProps(initialFormData)
-        assignMeta({ dataList: [] })
-    }, [])
+    //## init.通報現在在那支作業
+    useEffect(() => assignAppInfo({ ...formProfile }), [formProfile])
 
     function qryDataList() {
         const args = { foo: 'foo' }
