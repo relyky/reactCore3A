@@ -11,8 +11,7 @@ using reactCore3A.Models;
 
 namespace reactCore3A.Controllers
 {
-    //[Authorize]
-    [AutoValidateAntiforgeryToken]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SimpleFormController : ControllerBase

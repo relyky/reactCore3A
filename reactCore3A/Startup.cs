@@ -39,9 +39,10 @@ namespace reactCore3A
             // 有這行 才能用 MVC
             services.AddControllersWithViews(options => {
                 /// 全域加入 AntiforgeryToken 檢查
-                //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            // 設定 Antiforgery
             services.AddAntiforgery(options =>
             {
                 // Set Cookie properties using CookieBuilder properties†.
