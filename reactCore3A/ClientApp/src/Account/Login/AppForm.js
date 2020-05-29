@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react'
+﻿import React from 'react'
 import { showLastErrMsg } from 'Common/LastErrMsg'
 import axios from 'axios'
 import { InputText } from 'widgets/InputText'
@@ -18,9 +18,6 @@ export default function AppForm({ formProfile }) {
     const [formData, { assignValue /*, assignProps*/ }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData } /*, f_loading*/] = usePostData({ baseUrl: 'api/Account', trace: false })
-
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function handleLogin() {
         const args = {

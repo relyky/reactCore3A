@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react'
+﻿import React from 'react'
 
 import image01 from 'assets/image/image01.jpg'
 import image02 from 'assets/image/image02.jpg'
@@ -8,12 +8,9 @@ import useFormData from 'Hooks/useFormData'
 import useMetaStore from 'Hooks/useMetaStore'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [appInfo /*, { assignAppInfo }*/] = useAppInfo()
     const [formData /*, { assignValue, assignProps }*/] = useFormData()
     const [meta, /*{ assignMeta }*/] = useMetaStore()
-
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     console.log(formProfile.FORM_ID, { appInfo, formData, meta })
     return (

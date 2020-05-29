@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+﻿import React, { useState } from 'react'
 import { format } from 'date-fns'
 
 import useAppInfo from 'Hooks/useAppInfo'
@@ -8,16 +8,13 @@ import usePostData from 'Hooks/usePostData'
 import useLoad from 'Hooks/useLoad'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [appInfo /*, { assignAppInfo }*/] = useAppInfo()
     const [formData /*,{ assignValue, assignProps }*/] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData }, /*f_loading*/] = usePostData({ baseUrl: 'api/WeatherForecast' })
 
     const [args, setArgs] = useState({ type: 'C' })
     const [weekList, f_WeekLoading, error] = useLoad('api/CommonData/GetWeekList', args)
-
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function qryDataList() {
         const args = { foo: 'foo' }

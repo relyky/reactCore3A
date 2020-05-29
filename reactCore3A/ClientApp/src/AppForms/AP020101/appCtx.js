@@ -1,6 +1,7 @@
-﻿import React from 'react'
+﻿import React, { useEffect } from 'react'
 import { FormDataProvider } from 'Hooks/useFormData'
 import { MetaStoreProvider } from 'Hooks/useMetaStore'
+import useAppInfo from 'Hooks/useAppInfo'
 import AppForm from './AppForm'
 
 ///
@@ -23,7 +24,12 @@ const initFormData = {
 
 const initMeta = {}
 
-export default function appCtx(props) {
+export default (props) => {
+    const [/*appInfo*/, { assignAppInfo }] = useAppInfo();
+
+    //## init.通報現在在那支作業
+    useEffect(() => assignAppInfo({ ...formProfile }), [])
+
     return (
         <FormDataProvider init={initFormData}>
             <MetaStoreProvider init={initMeta}>

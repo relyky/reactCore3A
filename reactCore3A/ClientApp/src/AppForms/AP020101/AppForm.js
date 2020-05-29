@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react'
+﻿import React from 'react'
 //import { showLastErrMsg } from 'Common/LastErrMsg'
 import { InputText } from 'widgets/InputText'
 
@@ -9,13 +9,10 @@ import usePostData from 'Hooks/usePostData'
 //import useLoad from 'Hooks/useLoad'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo, { assignAppInfo }] = useAppInfo()
+    const [appInfo/*, { assignAppInfo }*/] = useAppInfo()
     const [formData, { assignValue, assignProps }] = useFormData()
     const [meta/*, { assignMeta }*/] = useMetaStore()
     const [{ postData }/*, f_loading*/] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
-
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     function handleSave() {
         postData('SaveFormData', formData).then(newFormData => {

@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react'
+﻿import React from 'react'
 import swal from 'sweetalert2'
 
 import useAppInfo from 'Hooks/useAppInfo'
@@ -9,9 +9,6 @@ export default function AppForm({ formProfile }) {
     const [appInfo, { assignAppInfo }] = useAppInfo()
     const [formData /*, {assignValue, assignProps} */] = useFormData()
     const [meta /*, { assignMeta }*/] = useMetaStore()
-
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
 
     async function swalPrompt() {
         const { value: password } = await swal.fire({
