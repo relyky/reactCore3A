@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Fluent;
+using NLog.Web;
 
 namespace reactCore3A
 {
@@ -13,6 +15,7 @@ namespace reactCore3A
     {
         public static void Main(string[] args)
         {
+            NLogBuilder.ConfigureNLog("nlog.config");
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -21,6 +24,10 @@ namespace reactCore3A
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                }).UseNLog();
     }
 }

@@ -51,6 +51,7 @@ namespace reactCore3A
                 options.FormFieldName = "__RequestVerificationToken";
                 options.HeaderName = "RequestVerificationToken";
                 options.SuppressXFrameOptionsHeader = false;
+                //options.Cookie.SameSite = SameSiteMode.Strict;
                 //options.Cookie.Name = ".AspNetCore.Antiforgery.ynF6Z8l01V0"
             });
 
@@ -199,6 +200,7 @@ namespace reactCore3A
                         new CookieOptions()
                         {
                             HttpOnly = false,
+                            SameSite = SameSiteMode.Strict,
                             Expires = new DateTimeOffset(DateTime.Now.AddSeconds(5d))
                         });
                 }

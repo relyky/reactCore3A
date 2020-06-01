@@ -20,5 +20,10 @@ namespace reactCore3A.Models
             return JsonConvert.DeserializeObject<T>(session.GetString(key));
             //return Utilities.DeserializeFromMemory<T>(session.Get(key));
         }
+
+        public static string ToJson(this Object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
     }
 }

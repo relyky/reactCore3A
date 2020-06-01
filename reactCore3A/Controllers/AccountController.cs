@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
 using WcfBizService;
+using Microsoft.Extensions.Logging;
 
 namespace reactCore3A.Controllers
 {
@@ -26,10 +27,13 @@ namespace reactCore3A.Controllers
     {
         private IConfiguration _config;
         private ISysEnv _env;
-        public AccountController(IConfiguration config, ISysEnv env)
+        private ILogger _logger;
+
+        public AccountController(IConfiguration config, ISysEnv env, ILogger<AccountController> logger)
         {
             _config = config;
             _env = env;
+            _logger = logger;
         }
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace reactCore3A.Controllers
 
         /// <summary>
         /// Cookie-base authorization
-        /// </summary>
+        /// </summary
         private void SigninWithCookieAuth(UserModel userInfo) 
         {
             // 計算有效時間
@@ -119,7 +123,10 @@ namespace reactCore3A.Controllers
         [HttpPost("[action]")]
         public IActionResult Login(LoginInfo login)
         {
+            _logger.LogInformation($"Login {login.ToJson()}");
+
             var accSvc = new AccountSvcClient();
+            string accSvcUrl = accSvc.Endpoint.Address.Uri.ToString();
 
             UserModel user = accSvc.AuthenticateUser(login);
             if (user != null)
