@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +14,7 @@ using WcfBizService;
 namespace reactCore3A.Models
 {
     /// <summary>
-    /// 將用於取用登入者資訊，統一取得所有環境參數等等
+    /// 將用於取用登入者資訊、環境參數、兼 Factory 等等
     /// </summary>
     public interface ISysEnv
     {
@@ -28,20 +29,24 @@ namespace reactCore3A.Models
         UserModel LoginUser { get; }
 
         void SetLoginUserInfo(UserModel loginUser);
+
+        /// <summary>
+        /// Factory, 預設原始碼是寫死的所以加入此建構函式以輔助
+        /// </summary>
+        AccountSvcClient CreateAccountSvcClient();
     }
 
-    /// <summary>
-    /// 將用於取用登入者資訊，環境參數等等
-    /// </summary>
     public class SysEnv : ISysEnv
     {
+        private readonly IConfiguration _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
 
-        public SysEnv(IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
+        public SysEnv(IHttpContextAccessor httpContextAccessor, IMemoryCache cache, IConfiguration config)
         {
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
+            _config = config;
         }
 
         public HttpContext Current => _httpContextAccessor.HttpContext;
@@ -85,6 +90,13 @@ namespace reactCore3A.Models
                 UserModel user = JsonConvert.DeserializeObject<UserModel>(_cache.Get<string>(loginInfo.loginUserId));
                 return user;
             }
+        }
+
+        public AccountSvcClient CreateAccountSvcClient() {
+            return new AccountSvcClient(
+                AccountSvcClient.EndpointConfiguration.BasicHttpBinding_IAccountSvc,
+                _config.GetValue<string>("ServicesPath:WcfBizService")
+            );
         }
     }
 }

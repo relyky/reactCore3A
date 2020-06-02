@@ -125,8 +125,9 @@ namespace reactCore3A.Controllers
         {
             _logger.LogInformation($"Login {login.ToJson()}");
 
-            var accSvc = new AccountSvcClient();
+            var accSvc = _env.CreateAccountSvcClient();
             string accSvcUrl = accSvc.Endpoint.Address.Uri.ToString();
+            _logger.LogTrace("認證網址：{accSvcUrl}。", accSvcUrl);
 
             UserModel user = accSvc.AuthenticateUser(login);
             if (user != null)
@@ -153,7 +154,7 @@ namespace reactCore3A.Controllers
         [HttpPost("[action]")]
         public IActionResult RequestBearer(LoginInfo login)
         {
-            var accSvc = new AccountSvcClient();
+            var accSvc = _env.CreateAccountSvcClient();
             UserModel user = accSvc.AuthenticateUser(login);
 
             if (user != null)
