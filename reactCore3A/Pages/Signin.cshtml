@@ -1,0 +1,23 @@
+﻿@page
+@model reactCore3A.Pages.SigninModel
+@{
+    ViewData["Title"] = "Signin";
+}
+
+<h1>Signin</h1>
+<p style="color:deeppink">這是實驗性試作。經綜合考慮雖 Core 3.1 RazorPage 語法較 MVC5 更簡單架構也更明瞭，然其核心問題未解且極難開發 RESTFul/Ajax 畫面，故留參不採用。</p>
+
+@if (ViewData["Message"] != null)
+{
+    <p>
+        @ViewData["Message"]
+    </p>
+}
+
+<form method="post">
+    userId:
+    <input asp-for="LoginInfo.userId" />
+    credential:
+    <input asp-for="LoginInfo.credential" />
+    <input type="submit" />
+</form>
