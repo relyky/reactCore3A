@@ -9,6 +9,8 @@ import * as serviceWorker from './serviceWorker';
 import { AppInfoProvider } from './Hooks/useAppInfo'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import store from './store/store'
+import { Provider } from 'react-redux'
 
 console.log('Page refresh')
 
@@ -21,9 +23,11 @@ axios.defaults.headers.post['RequestVerificationToken'] = cookies.get('__Request
 
 ReactDOM.render(
     <BrowserRouter>
-        <AppInfoProvider>
-            <App />
-        </AppInfoProvider>
+        <Provider store={store}>
+            <AppInfoProvider>
+                <App />
+            </AppInfoProvider>
+        </Provider>
     </BrowserRouter>,
     document.getElementById('root')
 );

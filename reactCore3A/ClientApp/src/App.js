@@ -7,6 +7,7 @@ import AP010101 from './AppForms/AP010101/appCtx'
 import AP010102 from './AppForms/AP010102/appCtx'
 import AP010103 from './AppForms/AP010103/appCtx'
 import AP020101 from './AppForms/AP020101/appCtx'
+import AP020102 from './AppForms/AP020102/appCtx'
 //import useAppInfo from './Hooks/useAppInfo'
 
 /// 
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/ap010102" component={AP010102} />
                 <Route path="/ap010103" component={AP010103} />
                 <Route path="/ap020101" component={AP020101} />
+                <Route path="/ap020102" component={AP020102} />
             </Switch>
         </Layout>
     );

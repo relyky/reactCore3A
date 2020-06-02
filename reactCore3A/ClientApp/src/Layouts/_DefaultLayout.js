@@ -46,7 +46,9 @@ export default function DefaultLayout(props) {
                     <li style={menuItemStyle}>
                         <Link to="/ap020101">AP020101</Link>
                     </li>
-
+                    <li style={menuItemStyle}>
+                        <Link to="/ap020102">AP020102</Link>
+                    </li>
                 </ul>
             </nav>
             <main>
