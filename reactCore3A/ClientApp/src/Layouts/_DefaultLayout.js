@@ -1,6 +1,6 @@
 ﻿import React from 'react'
 import { Link } from 'react-router-dom'
-import useAppInfo from 'Hooks/useAppInfo'
+import { useSelector } from 'react-redux' 
 
 //import clsx from 'clsx'
 //import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -19,7 +19,7 @@ import useAppInfo from 'Hooks/useAppInfo'
 
 /// PersistentDrawerLeft
 export default function DefaultLayout(props) {
-    const [appInfo] = useAppInfo()
+    const appInfo = useSelector(store => store.appInfo)
     return (
         <div>`
             <div>

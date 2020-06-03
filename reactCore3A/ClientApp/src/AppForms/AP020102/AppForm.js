@@ -2,13 +2,12 @@
 //import { showLastErrMsg } from 'Common/LastErrMsg'
 import { InputText } from 'widgets/InputText'
 
-import useAppInfo from 'Hooks/useAppInfo'
-import usePostData from 'Hooks/usePostData'
 import { useSelector } from 'react-redux'
 import { useStoreActions } from 'store/store.js'
+import usePostData from 'Hooks/usePostData'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo/*, { assignAppInfo }*/] = useAppInfo()
+    const { appInfo } = useSelector(store => store)
     const [{ postData }/*, f_loading*/] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
 
     const { formData, meta } = useSelector(store => store)

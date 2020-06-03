@@ -3,14 +3,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { AppInfoProvider } from './Hooks/useAppInfo'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import store from './store/store'
-import { Provider } from 'react-redux'
 
 console.log('Page refresh')
 
@@ -22,13 +21,11 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.headers.post['RequestVerificationToken'] = cookies.get('__RequestVerificationToken');;
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Provider store={store}>
-            <AppInfoProvider>
-                <App />
-            </AppInfoProvider>
-        </Provider>
-    </BrowserRouter>,
+    <Provider store={store}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
 );
 

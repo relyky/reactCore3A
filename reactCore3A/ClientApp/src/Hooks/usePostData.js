@@ -1,8 +1,8 @@
 ﻿import { useState } from 'react'
 import axios from 'axios'
-import useAppInfo from 'Hooks/useAppInfo'
 import t from 'typy'
 import { LastErrMsg, unboxLastErrMsg, showLastErrMsg } from 'Common/LastErrMsg'
+import { useStoreActions } from 'store/store.js'
 
 /// # 規格
 /// const [{ postData, downloadFile, uploadFile }, f_loading] = usePostData({ baseUrl:'/area/controller', blockui:true, trace:false, msgBox: true })
@@ -47,7 +47,7 @@ export default function usePostData(options) {
         ...options
     }
 
-    const [/*appInfo*/, { assignAppInfo }] = useAppInfo()
+    const { setBlocking } = useStoreActions()
     const [f_loading, setLoadingFlag] = useState(false)
 
     /// Do ajax post data request
@@ -59,7 +59,7 @@ export default function usePostData(options) {
         const { baseUrl, blockui, trace, msgBox } = { ...initOptions, ...options }
 
         setLoadingFlag(true)
-        blockui && assignAppInfo({ f_blocking: true })
+        blockui && setBlocking(true)
 
         // 組織 api url
         const url = determineApiUrl(baseUrl, apiName)
@@ -98,7 +98,7 @@ export default function usePostData(options) {
             throw lastErr; // 必需把錯誤再丟出去，不然會被判定為"成功"
         }).finally(() => {
             setLoadingFlag(false)
-            blockui && assignAppInfo({ f_blocking: false })
+            blockui && setBlocking(false)
         })
     }
 
@@ -114,7 +114,7 @@ export default function usePostData(options) {
         const { baseUrl, blockui, trace, msgBox } = { ...initOptions, ...options }
 
         setLoadingFlag(true)
-        blockui && assignAppInfo({ f_blocking: true })
+        blockui && setBlocking(true)
 
         // 組織 api url
         const url = determineApiUrl(baseUrl, apiName)
@@ -152,7 +152,7 @@ export default function usePostData(options) {
             throw lastErr; // 必需把錯誤再丟出去，不然會被判定為"成功"
         }).finally(() => {
             setLoadingFlag(false)
-            blockui && assignAppInfo({ f_blocking: false })
+            blockui && setBlocking(false)
         })
     }
 
@@ -169,7 +169,7 @@ export default function usePostData(options) {
         const { baseUrl, blockui, trace, msgBox } = { ...initOptions, ...options }
 
         setLoadingFlag(true)
-        blockui && assignAppInfo({ f_blocking: true })
+        blockui && setBlocking(true)
 
         // 組織 api url
         const url = determineApiUrl(baseUrl, apiName)
@@ -207,7 +207,7 @@ export default function usePostData(options) {
             throw lastErr; // 必需把錯誤再丟出去，不然會被判定為"成功"
         }).finally(() => {
             setLoadingFlag(false)
-            blockui && assignAppInfo({ f_blocking: false })
+            blockui && setBlocking(false)
         })
     }
 

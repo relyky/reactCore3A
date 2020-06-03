@@ -1,7 +1,5 @@
 ﻿import React, { useEffect } from 'react'
-import { FormDataProvider } from 'Hooks/useFormData'
-import { MetaStoreProvider } from 'Hooks/useMetaStore'
-import useAppInfo from 'Hooks/useAppInfo'
+import { useStoreActions } from 'store/store.js'
 import AppForm from './AppForm'
 
 ///
@@ -25,16 +23,16 @@ const initFormData = {
 const initMeta = {}
 
 export default (props) => {
-    const [/*appInfo*/, { assignAppInfo }] = useAppInfo();
+    const { assignAppInfo, setFormData, setMeta } = useStoreActions();
 
-    //## init.通報現在在那支作業
-    useEffect(() => assignAppInfo({ ...formProfile }), [])
+    //## init form & 通報現在在那支作業
+    useEffect(() => {
+        assignAppInfo(formProfile)
+        setFormData(initFormData)
+        setMeta(initMeta)
+    }, [])
 
     return (
-        <FormDataProvider init={initFormData}>
-            <MetaStoreProvider init={initMeta}>
-                <AppForm formProfile={formProfile} />
-            </MetaStoreProvider>
-        </FormDataProvider>
+        <AppForm formProfile={formProfile} />
     )
 }

@@ -1,10 +1,10 @@
 ﻿import React, { useEffect } from 'react'
 import logo from 'assets/logo.svg'
 import './Home.css'
-import useAppInfo from 'Hooks/useAppInfo'
+import { useStoreActions } from 'store/store.js'
 
 export default function Home(props) {
-    const [app, { assignAppInfo }] = useAppInfo()
+    const { assignAppInfo } = useStoreActions()
 
     //## init.
     useEffect(() => {

@@ -1,14 +1,11 @@
 ﻿import React from 'react'
 import swal from 'sweetalert2'
 
-import useAppInfo from 'Hooks/useAppInfo'
-import useFormData from 'Hooks/useFormData'
-import useMetaStore from 'Hooks/useMetaStore'
+import { useSelector } from 'react-redux'
+//import { useStoreActions } from 'store/store.js'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo, { assignAppInfo }] = useAppInfo()
-    const [formData /*, {assignValue, assignProps} */] = useFormData()
-    const [meta /*, { assignMeta }*/] = useMetaStore()
+    const { appInfo, formData, meta } = useSelector(store => store)
 
     async function swalPrompt() {
         const { value: password } = await swal.fire({
