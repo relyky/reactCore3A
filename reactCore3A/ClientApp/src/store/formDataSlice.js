@@ -22,6 +22,10 @@ export default createSlice({
             if (!t(payload).isObject) throw new Error('Invalid value type!')
             return { ...state, ...payload } /// <--- Spread Syntax也有效
         },
+        setFormData: (state, { payload /* object */ }) => {
+            if (!t(payload).isObject) throw new Error('Invalid value type!')
+            return { ...payload } /// <--- Spread Syntax也有效
+        },
     }
 });
 

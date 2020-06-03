@@ -2,16 +2,14 @@
 //import { showLastErrMsg } from 'Common/LastErrMsg'
 import { InputText } from 'widgets/InputText'
 
-import useAppInfo from 'Hooks/useAppInfo'
-import useFormData from 'Hooks/useFormData'
-import useMetaStore from 'Hooks/useMetaStore'
+import { useSelector } from 'react-redux'
+import { useStoreActions } from 'store/store.js'
 import usePostData from 'Hooks/usePostData'
 //import useLoad from 'Hooks/useLoad'
 
 export default function AppForm({ formProfile }) {
-    const [appInfo/*, { assignAppInfo }*/] = useAppInfo()
-    const [formData, { assignValue, assignProps }] = useFormData()
-    const [meta/*, { assignMeta }*/] = useMetaStore()
+    const { appInfo, formData, meta } = useSelector(store => store)
+    const { assignProps, assignValue } = useStoreActions()
     const [{ postData }/*, f_loading*/] = usePostData({ baseUrl: 'api/SimpleForm', trace: false })
 
     function handleSave() {

@@ -19,7 +19,7 @@ export default configureStore({
 
 // action list
 const { assignAppInfo, resetAppInfo, setBlocking } = appInfoSlice.actions
-const { assignValue, assignProps } = formDataSlice.actions
+const { assignValue, assignProps, setFormData } = formDataSlice.actions
 const { assignMeta, setMeta } = metaDataSlice.actions
 
 // wrapping "dispatch(action)" with useDispatch more higher
@@ -34,6 +34,7 @@ export function useStoreActions() {
         // formData actions
         assignValue: (name /* string */, value /* any */) => dispatch(assignValue({ name, value })),
         assignProps: (payload) => dispatch(assignProps(payload)),
+        setFormData: (payload) => dispatch(setFormData(payload)),
 
         // metaData actions
         assignMeta: (payload) => dispatch(assignMeta(payload)),
