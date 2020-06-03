@@ -1,11 +1,13 @@
 ﻿import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux' 
 //import counter from './counterSlice';
-import formDataSlice from './formDataSlice';
-import metaDataSlice from './metaDataSlice';
+import appInfoSlice from './appInfoSlice'
+import formDataSlice from './formDataSlice'
+import metaDataSlice from './metaDataSlice'
 
 export default configureStore({
     reducer: {
+        appInfo: appInfoSlice.reducer,
         formData: formDataSlice.reducer,
         meta: metaDataSlice.reducer,
         //counter,
@@ -16,6 +18,7 @@ export default configureStore({
 //-----------------------------------------------------------------------
 
 // action list
+const { assignAppInfo, resetAppInfo, setBlocking } = appInfoSlice.actions
 const { assignValue, assignProps } = formDataSlice.actions
 const { assignMeta, setMeta } = metaDataSlice.actions
 
@@ -23,10 +26,18 @@ const { assignMeta, setMeta } = metaDataSlice.actions
 export function useStoreActions() {
     const dispatch = useDispatch()
     return {
-        assignValue: (name, value) => dispatch(assignValue({ name, value })),
+        // appInfo actions
+        assignAppInfo: (payload) => dispatch(assignAppInfo(payload)),
+        resetAppInfo: () => dispatch(resetAppInfo()),
+        setBlocking: (f_blocking /* bool */) => dispatch(setBlocking(f_blocking)),
+
+        // formData actions
+        assignValue: (name /* string */, value /* any */) => dispatch(assignValue({ name, value })),
         assignProps: (payload) => dispatch(assignProps(payload)),
+
+        // metaData actions
         assignMeta: (payload) => dispatch(assignMeta(payload)),
-        setMeta: (payload) => dispatch(setMeta(payload))
+        setMeta: (payload) => dispatch(setMeta(payload)),
     }
 }
 

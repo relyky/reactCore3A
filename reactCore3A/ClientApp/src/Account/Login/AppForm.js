@@ -10,6 +10,9 @@ import useMetaStore from 'Hooks/useMetaStore'
 import usePostData from 'Hooks/usePostData'
 //import useLoad from 'Hooks/useLoad'
 
+import { useSelector } from 'react-redux'
+import { useStoreActions } from 'store/store.js'
+
 // resource
 const cookies = new Cookies()
 
@@ -18,6 +21,8 @@ export default function AppForm({ formProfile }) {
     const [formData, { assignValue /*, assignProps*/ }] = useFormData()
     const [meta, { assignMeta }] = useMetaStore()
     const [{ postData } /*, f_loading*/] = usePostData({ baseUrl: 'api/Account', trace: false })
+
+    const { assignAppInfo: assignAppInfo2store } = useStoreActions()
 
     function handleLogin() {
         const args = {
@@ -46,6 +51,7 @@ export default function AppForm({ formProfile }) {
             postData('GetLoginInfo').then(loginInfo => {
                 //console.log('GetLoginInfo', data)
                 assignAppInfo({ ...loginInfo })
+                assignAppInfo2store(loginInfo)
             })
         })
     }
