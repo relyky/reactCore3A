@@ -1,6 +1,7 @@
 ﻿import { configureStore } from '@reduxjs/toolkit';
-import counter from './counterSlice';
-import formData from './formDataReducer';
+import { useDispatch } from 'react-redux' 
+//import counter from './counterSlice';
+import formData, { assignValue, assignProps } from './formDataSlice';
 
 export default configureStore({
     reducer: {
@@ -9,3 +10,14 @@ export default configureStore({
     },
     devTools: process.env.NODE_ENV !== 'production'
 });
+
+//-----------------------------------------------------------------------
+// wrapping useDispatch more higher
+export function useStoreActions() {
+    const dispatch = useDispatch()
+    return {
+        assignValue: (name, value) => dispatch(assignValue({ name, value })),
+        assignProps: (payload) => dispatch(assignProps(payload)),
+    }
+}
+
