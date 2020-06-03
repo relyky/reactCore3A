@@ -7,7 +7,8 @@ import t from 'typy'
 /// which detects changes to a "draft state" and produces a brand new
 /// immutable state based off those changes
 
-export const formDataSlice = createSlice({
+//export const formDataSlice = createSlice({
+export default createSlice({
     name: 'formData',
     initialState: {},
     reducers: {
@@ -24,8 +25,8 @@ export const formDataSlice = createSlice({
     }
 });
 
-// export actions
-export const { assignValue, assignProps } = formDataSlice.actions;
+//// export actions
+//export const { assignValue, assignProps } = formDataSlice.actions;
 
-// export reducer
-export default formDataSlice.reducer;
+//// export reducer
+//export default formDataSlice.reducer;

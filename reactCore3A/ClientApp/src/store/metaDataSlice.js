@@ -7,7 +7,7 @@ import t from 'typy'
 /// which detects changes to a "draft state" and produces a brand new
 /// immutable state based off those changes
 
-export const metaDataSlice = createSlice({
+export default createSlice({
     name: 'metaData',
     initialState: {},
     reducers: {
@@ -23,8 +23,8 @@ export const metaDataSlice = createSlice({
     }
 });
 
-// export actions
-export const { assignMeta, setMeta } = metaDataSlice.actions;
+//// export actions
+//export const { assignMeta, setMeta } = metaDataSlice.actions;
 
-// export reducer
-export default metaDataSlice.reducer;
+//// export reducer
+//export default metaDataSlice.reducer;
