@@ -1,9 +1,11 @@
 ﻿import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './counterSlice';
+import counter from './counterSlice';
+import formData from './formDataReducer';
 
 export default configureStore({
     reducer: {
-        counter: counterReducer,
+        formData,
+        counter,
     },
     devTools: process.env.NODE_ENV !== 'production'
 });

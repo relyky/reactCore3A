@@ -1,5 +1,8 @@
 ﻿import { createSlice } from '@reduxjs/toolkit';
 
+/// createSlice 比較適用於強型別也就是 TypeScript 的語法開發
+/// 於現在案例不太適用
+
 export const counterSlice = createSlice({
     name: 'counter',
     initialState: {
