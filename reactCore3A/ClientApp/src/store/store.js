@@ -2,11 +2,13 @@
 import { useDispatch } from 'react-redux' 
 //import counter from './counterSlice';
 import formData, { assignValue, assignProps } from './formDataSlice';
+import meta, { assignMeta, setMeta } from './metaDataSlice';
 
 export default configureStore({
     reducer: {
         formData,
-        counter,
+        meta,
+        //counter,
     },
     devTools: process.env.NODE_ENV !== 'production'
 });
@@ -18,6 +20,8 @@ export function useStoreActions() {
     return {
         assignValue: (name, value) => dispatch(assignValue({ name, value })),
         assignProps: (payload) => dispatch(assignProps(payload)),
+        assignMeta: (payload) => dispatch(assignMeta(payload)),
+        setMeta: (payload) => dispatch(setMeta(payload))
     }
 }
 
