@@ -194,8 +194,8 @@ namespace reactCore3A
 
                 // 只有幾個進入畫面可以取得 Antiforgery Token
                 if (String.Equals(path, "/", StringComparison.OrdinalIgnoreCase) ||
-                    String.Equals(path, "/index.html", StringComparison.OrdinalIgnoreCase) ||
-                    String.Equals(path, "/Login", StringComparison.OrdinalIgnoreCase))
+                    String.Equals(path, "/index", StringComparison.OrdinalIgnoreCase) ||
+                    String.Equals(path, "/login", StringComparison.OrdinalIgnoreCase))
                 {
                     var tokens = antiforgery.GetAndStoreTokens(context);
                     context.Response.Cookies.Append(tokens.FormFieldName, tokens.RequestToken,

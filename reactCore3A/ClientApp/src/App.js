@@ -1,5 +1,11 @@
-import React from 'react'
+///
+/// 註冊AppForm與Routing。
+///
+import React, { useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
+import { format } from 'date-fns'
+import axios from 'axios'
+import Cookies from 'universal-cookie'
 import Layout from './Layouts/_DefaultLayout'
 import Home from './Home'
 import LoginPage from './Account/Login/appCtx'
@@ -8,15 +14,23 @@ import AP010102 from './AppForms/AP010102/appCtx'
 import AP010103 from './AppForms/AP010103/appCtx'
 import AP020101 from './AppForms/AP020101/appCtx'
 import AP020102 from './AppForms/AP020102/appCtx'
-//import useAppInfo from './Hooks/useAppInfo'
 
-/// 
-/// 註冊AppForm與Routing。
-///
+//import { useSelector } from 'react-redux'
+import { useStoreActions } from 'store/store.js'
 
-function App() {
-    //const [appInfo, { setAppInfo }] = useAppInfo()
-    //console.log('App', { appInfo })
+// resource
+const cookies = new Cookies()
+const RequestVerificationToken = cookies.get('__RequestVerificationToken')
+
+//axios.defaults.headers.post['Authorization'] = 'Bearer ' + data.token;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['RequestVerificationToken'] = RequestVerificationToken; //cookies.get('__RequestVerificationToken');
+alert('refresh antiforgery-token')
+
+/// App
+export default function App() {
+    const { assignAppInfo } = useStoreActions()
+
     return (
         <Layout>
             <Switch>
@@ -31,5 +45,3 @@ function App() {
         </Layout>
     );
 }
-
-export default App;

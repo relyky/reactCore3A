@@ -141,6 +141,7 @@ namespace reactCore3A.Controllers
             return Unauthorized();
         }
 
+        [IgnoreAntiforgeryToken]
         [HttpPost("[action]")]
         public IActionResult Logout()
         {
