@@ -21,7 +21,7 @@ export default createSlice({
         },
         setBlocking: (state, { payload }) => {
             if (!t(payload).isBoolean) throw new Error('Invalid value type!')
-            state.f_blocking = (payload == true)
+            state.f_blocking = !!(payload)
         }, 
     }
 });
