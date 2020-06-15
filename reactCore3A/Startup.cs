@@ -37,6 +37,8 @@ namespace reactCore3A
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
 
+            services.AddScoped<MySampleActionFilter>();
+
             services.AddRazorPages();
 
             // 有這行 才能用 MVC

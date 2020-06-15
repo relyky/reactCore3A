@@ -58,6 +58,7 @@ namespace reactCore3A.Controllers
         /// SaveFormData
         /// </summary>
         [HttpPost("[action]")]
+        [ServiceFilter(typeof(MySampleActionFilter))]
         public IActionResult SaveFormData(SimpleFormVM formData)
         {
             // 執行存檔
